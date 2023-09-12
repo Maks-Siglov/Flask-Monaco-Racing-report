@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 
 def prepare():
-    start_log, end_log, abbreviations_data = ReaderFiles(r'./data').read_log_files()
+    start_log, end_log, abbreviations_data = ReaderFiles(r'./datatest').read_log_files()
     prepared_data = Report(start_log, end_log, abbreviations_data).build_report()
     prepared_data.sort(key=lambda x: x[2])
     prepared_data = list(enumerate(prepared_data, start=1))
