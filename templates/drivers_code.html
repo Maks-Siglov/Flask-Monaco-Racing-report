@@ -20,7 +20,7 @@
     <tbody>
         {% for index, item in prepared_data %}
         <tr>
-            <td>{{ index }}</td>
+            <td>{{ index }}.</td>
             <td>{{ item[0] }}</td>
             <td><a href="{{ url_for('drivers_id', driver_id=item[3]) }}">{{ item[3] }}</a></td>
         </tr>
