@@ -1,5 +1,5 @@
-from report import Report
-from utils import ReaderFiles
+from main.report import Report
+from main.utils import ReaderFiles
 from flask import Flask, render_template, request
 
 app = Flask(__name__, template_folder=r'..\templates')

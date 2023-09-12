@@ -1,5 +1,5 @@
 from datetime import datetime
-from utils import format_timedelta
+from main.utils import format_timedelta
 
 
 class Report:                                                                   
