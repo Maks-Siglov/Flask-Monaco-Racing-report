@@ -1,6 +1,6 @@
 from main.report import Report
 from main.utils import ReaderFiles
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 app = Flask(__name__)
 
@@ -21,11 +21,22 @@ def common_statistics():
     return render_template('statistics.html', prepared_data=prepared_data)
 
 
-@app.route('/report/drivers')
+@app.route('/report/drivers/')
 def drivers_code():
     prepared_data = prepare()
+    order = request.args.get('order', 'asc')
+
+    if order == 'desc':
+        prepared_data.reverse()
 
     return render_template('drivers_code.html', prepared_data=prepared_data)
+
+
+@app.route('/report/drivers/<driver_id>')
+def drivers_id(driver_id):
+    prepared_data = prepare()
+
+    return render_template('driver_id.html', prepared_data=prepared_data, driver_id=driver_id)
 
 
 if __name__ == '__main__':
