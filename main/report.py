@@ -40,9 +40,9 @@ def build_data(file) -> dict[str, datetime]:
     return prepare_result
 
 
-separator_symbol = '-'
-separator_length = 62
-index_indent, name_indent, team_indent = 3, 18, 26
+SEPARATOR_SYMBOL = '-'
+SEPARATOR_LENGTH = 62
+INDEX_INDENT, NAME_INDENT, TEAM_INDENT = 3, 18, 26
 
 
 def print_report(prepared_data, index_underline=16) -> None:
@@ -57,13 +57,13 @@ def print_report(prepared_data, index_underline=16) -> None:
         name, team, lap_time, _ = item
         minutes, seconds = lap_time
         string_index = f'{str(index)}.'
-        row = f'{string_index:<{index_indent}} {name:<{name_indent}} | {team:<{team_indent}} | {minutes}:{seconds}'
+        row = f'{string_index:<{INDEX_INDENT}} {name:<{NAME_INDENT}} | {team:<{TEAM_INDENT}} | {minutes}:{seconds}'
 
         if index != index_underline:
             print(row)
 
         else:
-            print(separator_symbol * separator_length)
+            print(SEPARATOR_SYMBOL * SEPARATOR_LENGTH)
             print(row)
 
 

@@ -2,9 +2,10 @@ from main.report import build_report
 from main.utils import read_log_files
 from flask import Flask, render_template, request
 
-app = Flask(__name__, template_folder=r'..\templates')
+DATA_FOLDER_PATH = './data'
+TEMPLATE_FOLDER = r'..\templates'
 
-data_folder_path = './data'
+app = Flask(__name__, template_folder=TEMPLATE_FOLDER)
 
 
 def prepare() -> list:
@@ -12,7 +13,7 @@ def prepare() -> list:
 
     :return: data which used for creating web application
     """
-    start_log, end_log, abbreviations_data = read_log_files(data_folder_path)
+    start_log, end_log, abbreviations_data = read_log_files(DATA_FOLDER_PATH)
     prepared_data = build_report(start_log, end_log, abbreviations_data)
     prepared_data.sort(key=lambda x: x[2])
     prepared_data = list(enumerate(prepared_data, start=1))
