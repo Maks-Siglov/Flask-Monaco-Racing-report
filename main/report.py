@@ -1,8 +1,18 @@
 from datetime import datetime
-from main.utils import format_timedelta
+from utils import format_timedelta
+from typing import List, Tuple
 
 
-def build_report(start_log, end_log, abbreviations_data) -> list[tuple]:
+SEPARATOR_SYMBOL = '-'
+SEPARATOR_LENGTH = 62
+INDEX_INDENT = 3
+NAME_INDENT = 18
+TEAM_INDENT = 26
+INDEX_UNDERLINE = 16
+
+
+def build_report(start_log: dict, end_log: dict,
+                 abbreviations_data: list) -> list[int, tuple[str, str, tuple[int, float], str]]:
     """This function prepare data for print_report()
 
     :param start_log: data about start time lap from log file
@@ -23,16 +33,16 @@ def build_report(start_log, end_log, abbreviations_data) -> list[tuple]:
     return prepared_data
 
 
-def build_data(file) -> dict[str, datetime]:
+def build_data(file_name: str) -> dict[str, datetime]:
     """This function takes data for file
 
-    :param file: file where we take data
+    :param file_name: file where we take data
     :return: dictionary, where abbreviation is key, start lap time - is value
     """
 
     prepare_result = {}
 
-    for param in file:
+    for param in file_name:
         abbreviation, date_obj = param.strip().split('2018-05-24_12:')
         date_obj = datetime.strptime(date_obj, '%M:%S.%f')
         prepare_result[abbreviation] = date_obj
@@ -40,12 +50,8 @@ def build_data(file) -> dict[str, datetime]:
     return prepare_result
 
 
-SEPARATOR_SYMBOL = '-'
-SEPARATOR_LENGTH = 62
-INDEX_INDENT, NAME_INDENT, TEAM_INDENT = 3, 18, 26
-
-
-def print_report(prepared_data, index_underline=16) -> None:
+def print_report(prepared_data: List[Tuple[str, str, Tuple[int, float], str]],
+                 index_underline: int = INDEX_UNDERLINE) -> None:
     """This function build (print) report
 
     :param prepared_data: list with prepared data for report from build_report()
@@ -53,13 +59,13 @@ def print_report(prepared_data, index_underline=16) -> None:
     if we use descending ordering
     """
 
-    for index, item in prepared_data:
+    for position, item in prepared_data:
         name, team, lap_time, _ = item
         minutes, seconds = lap_time
-        string_index = f'{str(index)}.'
-        row = f'{string_index:<{INDEX_INDENT}} {name:<{NAME_INDENT}} | {team:<{TEAM_INDENT}} | {minutes}:{seconds}'
+        string_position = f'{position}.'
+        row = f'{string_position:<{INDEX_INDENT}} {name:<{NAME_INDENT}} | {team:<{TEAM_INDENT}} | {minutes}:{seconds}'
 
-        if index != index_underline:
+        if position != index_underline:
             print(row)
 
         else:
@@ -67,15 +73,15 @@ def print_report(prepared_data, index_underline=16) -> None:
             print(row)
 
 
-def report_unique_driver(driver_name, prepared_data) -> None:
+def report_unique_driver(driver_name: str, prepared_data: List[Tuple[str, str, Tuple[int, float], str]]) -> None:
     """This function build (print) report about unique driver
 
     :param driver_name: name of the driver
     :param prepared_data: data for report
     """
 
-    for index, item in prepared_data:
+    for position, item in prepared_data:
         name, team, lap_time, _ = item
         minutes, seconds = lap_time
         if driver_name == name:
-            print(f'{index}. {name} | {team} | {minutes}:{seconds}')
+            print(f'{position}. {name} | {team} | {minutes}:{seconds}')
