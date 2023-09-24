@@ -2,7 +2,7 @@ from main.report import build_report
 from main.utils import read_log_files
 from flask import Flask, render_template, request
 
-DATA_FOLDER_PATH = cli.args.files                       #'./data'
+DATA_FOLDER_PATH = './data'
 TEMPLATE_FOLDER = r'..\templates'
 
 app = Flask(__name__, template_folder=TEMPLATE_FOLDER)

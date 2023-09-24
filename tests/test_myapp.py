@@ -1,6 +1,7 @@
 import pytest
 
-test_case = [('Common Statistics', '/report'), ('Drivers code', '/report/drivers/'), ('Drivers code', '/report/drivers/?order=desc'), ('Driver Details', '/report/drivers/SPF')]
+test_case = [('Common Statistics', '/report'), ('Drivers code', '/report/drivers/'),
+             ('Drivers code', '/report/drivers/?order=desc'), ('Driver Details', '/report/drivers/SPF')]
 
 
 @pytest.mark.parametrize('header, route', test_case)

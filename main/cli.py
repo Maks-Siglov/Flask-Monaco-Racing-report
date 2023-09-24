@@ -21,7 +21,7 @@ def start_parser() -> tuple[str, str | None, bool]:
 
     if not os.path.exists(args.files):
         raise ValueError("Path from --file argument don't exist")
-    print(args.files, args.driver, args.desc)
+
     return args.files, args.driver, args.desc
 
 
@@ -51,6 +51,5 @@ def build_parser(args_files: str, args_driver: str, args_desc: bool) -> None:
 
 
 if __name__ == '__main__':
-    # args_files, args_driver, args_desc = start_parser()
-    # build_parser(args_files, args_driver, args_desc)
-    a = start_parser()
+    args_files, args_driver, args_desc = start_parser()
+    build_parser(args_files, args_driver, args_desc)
