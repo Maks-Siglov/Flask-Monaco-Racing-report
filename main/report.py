@@ -1,7 +1,10 @@
+from utils import format_timedelta, read_log_files
 from datetime import datetime
-from utils import format_timedelta
 from typing import List, Tuple
+import re
 
+PATTERN = re.compile(r'(^[A-Z]+)(\S+)')
+DATE_FORMAT = '%Y-%m-%d_%H:%M:%S.%f'
 
 SEPARATOR_SYMBOL = '-'
 SEPARATOR_LENGTH = 62
@@ -11,7 +14,33 @@ TEAM_INDENT = 26
 INDEX_UNDERLINE = 16
 
 
-def build_report(start_log: dict, end_log: dict,
+def build_from_parser(args_files: str, args_driver: str, args_desc: bool) -> None:
+    """This function takes argument for parser and build report
+
+    :param args_files: path to the data folder, argument from start_parser()
+    :param args_driver: name of the driver about whom we show the statistic, if None we don't show
+    :param args_desc: order in which we show drivers statistic, if True order-descending, if False order-ascending
+    """
+
+    if args_files:
+        start_log, end_log, abbreviations_data = read_log_files(args_files)
+        prepared_data = prepare_data(start_log, end_log, abbreviations_data)
+        prepared_data.sort(key=lambda x: x[2])
+        prepared_data = list(enumerate(prepared_data, start=1))
+
+    if args_driver:
+        report_unique_driver(args_driver, prepared_data)
+
+    if args_desc is False and args_driver is None:
+        print_report(prepared_data)
+
+    if args_desc is True:
+        prepared_data.reverse()
+        index_underline = 15
+        print_report(prepared_data, index_underline)
+
+
+def prepare_data(start_log: list[str], end_log: list[str],
                  abbreviations_data: list) -> list[int, tuple[str, str, tuple[int, float], str]]:
     """This function prepare data for print_report()
 
@@ -20,32 +49,32 @@ def build_report(start_log: dict, end_log: dict,
     :param abbreviations_data: data from file contains abbreviation explanations
     :return: data for building (printing) report
     """
-    prepare_start = build_data(start_log)
-    prepare_end = build_data(end_log)
+    prepare_start = prepare_data_from_file(start_log)
+    prepare_end = prepare_data_from_file(end_log)
 
     prepared_data = []
 
     for param in abbreviations_data:
-        abv, name, team = param.strip().split('_')
-        lap_time = format_timedelta(prepare_end[abv] - prepare_start[abv])
-        prepared_data.append((name, team, lap_time, abv))
+        abr, name, team = param.strip().split('_')
+        lap_time = format_timedelta(prepare_end[abr] - prepare_start[abr])
+        prepared_data.append((name, team, lap_time, abr))
 
     return prepared_data
 
 
-def build_data(file_name: str) -> dict[str, datetime]:
+def prepare_data_from_file(file_data: str) -> dict[str, datetime]:
     """This function takes data for file
 
-    :param file_name: file where we take data
+    :param file_data: file where we take data
     :return: dictionary, where abbreviation is key, start lap time - is value
     """
 
     prepare_result = {}
 
-    for param in file_name:
-        abbreviation, date_obj = param.strip().split('2018-05-24_12:')
-        date_obj = datetime.strptime(date_obj, '%M:%S.%f')
-        prepare_result[abbreviation] = date_obj
+    for param in file_data:
+        match = PATTERN.match(param)
+        abr, time = match.groups()
+        prepare_result[abr] = datetime.strptime(time, DATE_FORMAT)
 
     return prepare_result
 

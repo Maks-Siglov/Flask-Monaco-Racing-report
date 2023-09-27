@@ -1,5 +1,5 @@
-from main.report import build_report
-from main.utils import read_log_files
+from report import prepare_data
+from utils import read_log_files
 from flask import Flask, render_template, request
 
 DATA_FOLDER_PATH = './data'
@@ -14,7 +14,7 @@ def prepare() -> list[int, tuple[str, str, tuple[int, float], str]]:
     :return: data which used for creating web application
     """
     start_log, end_log, abbreviations_data = read_log_files(DATA_FOLDER_PATH)
-    prepared_data = build_report(start_log, end_log, abbreviations_data)
+    prepared_data = prepare_data(start_log, end_log, abbreviations_data)
     prepared_data.sort(key=lambda x: x[2])
     prepared_data = list(enumerate(prepared_data, start=1))
 
