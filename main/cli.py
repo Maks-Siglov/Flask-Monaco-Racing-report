@@ -11,7 +11,7 @@ def start_parser() -> tuple[str, str | None, bool]:
 
     parser = argparse.ArgumentParser(prog='Report_CLI', description='CLI for report')
 
-    parser.add_argument('--files', default='../data/', help='Give a path to the dir with logs file')
+    parser.add_argument('--files', default='./data/', help='Give a path to the dir with logs file')
     parser.add_argument('--asc', action='store_true',  help='Sort in ascending order.')
     parser.add_argument('--desc', action='store_true', help='Sort in descending order.')
     parser.add_argument('--driver', help='Shows statistic about driver ')

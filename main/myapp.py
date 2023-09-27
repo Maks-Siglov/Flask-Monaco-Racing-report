@@ -1,8 +1,8 @@
 from report import prepare_data
 from utils import read_log_files
 from flask import Flask, render_template, request
+from cli import start_parser
 
-DATA_FOLDER_PATH = './data'
 TEMPLATE_FOLDER = r'..\templates'
 
 app = Flask(__name__, template_folder=TEMPLATE_FOLDER)
@@ -13,7 +13,7 @@ def prepare() -> list[int, tuple[str, str, tuple[int, float], str]]:
 
     :return: data which used for creating web application
     """
-    start_log, end_log, abbreviations_data = read_log_files(DATA_FOLDER_PATH)
+    start_log, end_log, abbreviations_data = read_log_files(ARGS_FILES)
     prepared_data = prepare_data(start_log, end_log, abbreviations_data)
     prepared_data.sort(key=lambda x: x[2])
     prepared_data = list(enumerate(prepared_data, start=1))
@@ -60,4 +60,5 @@ def drivers_id(driver_id: int) -> str:
 
 
 if __name__ == '__main__':
+    ARGS_FILES, ARGS_DRIVER, ARGS_DESC = start_parser()
     app.run(debug=True)
