@@ -1,5 +1,5 @@
-from utils import format_timedelta, read_log_files
 from datetime import datetime
+from main.utils.utils_for_report import read_log_files, format_timedelta
 from typing import List, Tuple
 import re
 
@@ -53,7 +53,6 @@ def prepare_data(start_log: list[str], end_log: list[str],
     prepare_end = prepare_data_from_file(end_log)
 
     prepared_data = []
-
     for param in abbreviations_data:
         abr, name, team = param.strip().split('_')
         lap_time = format_timedelta(prepare_end[abr] - prepare_start[abr])
