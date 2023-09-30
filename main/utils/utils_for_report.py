@@ -27,14 +27,11 @@ def read_file(folder_path: str, filename: str) -> list[str]:
     """
 
     file_path = os.path.join(folder_path, filename)
-    if os.path.isfile(file_path):
-        with open(file_path, 'r') as f:
-            result = f.read().splitlines()
-
-        return result
-
-    else:
+    if not os.path.isfile(file_path):
         raise ValueError(f"Path {file_path} don't exist")
+    with open(file_path, 'r') as f:
+        result = f.read().splitlines()
+    return result
 
 
 def format_timedelta(timedelta_obj: timedelta) -> tuple[int, float]:

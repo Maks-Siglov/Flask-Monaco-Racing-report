@@ -1,5 +1,5 @@
 from main.utils import utils_for_app
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, abort
 from cli import start_parser
 
 TEMPLATE_FOLDER = r'..\templates'
@@ -14,7 +14,6 @@ def common_statistics() -> str:
 
     :return: render HTML template
     """
-
     return render_template('statistics.html', prepared_data=PREPARED_DATA)
 
 
@@ -39,8 +38,10 @@ def drivers_id(driver_id: int) -> str:
     :param driver_id: id of the driver
     :return: render HTML template
      """
-
-    return render_template('driver_id.html', prepared_data=PREPARED_DATA, driver_id=driver_id)
+    for index, item in PREPARED_DATA:
+        if driver_id == item[3]:
+            return render_template('driver_id.html', prepared_data=PREPARED_DATA, driver_id=driver_id)
+    abort(404)
 
 
 if __name__ == '__main__':
