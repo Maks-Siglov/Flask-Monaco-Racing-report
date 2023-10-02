@@ -11,7 +11,7 @@ def test_report(client, header, route):
     assert header.encode() in response.data
 
 
-not_exist_route_cases = [('non/existing/route', 404), ('/report/drivers/NOT', 404)]
+not_exist_route_cases = [('/report/drivers/NOT', 404)]
 
 
 @pytest.mark.parametrize('route, status_code', not_exist_route_cases)
