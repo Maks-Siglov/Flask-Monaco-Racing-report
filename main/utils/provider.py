@@ -1,5 +1,4 @@
 import os
-from datetime import timedelta
 
 START_LOG = 'start.log'
 END_LOG = 'end.log'
@@ -32,14 +31,3 @@ def read_file(folder_path: str, filename: str) -> list[str]:
     with open(file_path, 'r') as f:
         result = f.read().splitlines()
     return result
-
-
-def format_timedelta(timedelta_obj: timedelta) -> tuple[int, float]:
-    """This function convert timedelta object into tuple with numbers for report
-
-    :param timedelta_obj: timedelta result of subtraction of time of end lap and start lap
-    :return: tuple with minutes and seconds (int and float)
-    """
-    minute, seconds = divmod(timedelta_obj.total_seconds(), 60)
-
-    return int(minute), round(seconds, 3)

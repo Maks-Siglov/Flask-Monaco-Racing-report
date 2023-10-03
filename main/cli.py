@@ -1,4 +1,4 @@
-from report import build_from_parser
+from main.report import build_from_parser
 import argparse
 import os
 
@@ -8,18 +8,35 @@ def start_parser() -> tuple[str, str | None, bool]:
 
     :return: arguments for build parser
     """
+    FOLDER_DATA = r'.\data'
 
-    parser = argparse.ArgumentParser(prog='Report_CLI', description='CLI for report')
+    parser = argparse.ArgumentParser(prog='Report_CLI',
+                                     description='CLI for report')
 
-    parser.add_argument('--files', default='./data/', help='Give a path to the dir with logs file')
-    parser.add_argument('--asc', action='store_true',  help='Sort in ascending order.')
-    parser.add_argument('--desc', action='store_true', help='Sort in descending order.')
-    parser.add_argument('--driver', help='Shows statistic about driver ')
+    parser.add_argument(
+                        '--files',
+                        default=FOLDER_DATA,
+                        help='Give a path to the dir with logs file'
+                        )
+    parser.add_argument(
+                        '--asc',
+                        action='store_true',
+                        help='Sort in ascending order.'
+                        )
+    parser.add_argument(
+                        '--desc',
+                        action='store_true'
+                        , help='Sort in descending order.'
+                        )
+    parser.add_argument(
+                        '--driver',
+                        help='Shows statistic about driver '
+                        )
 
     args = parser.parse_args()
 
     if not os.path.exists(args.files):
-        raise ValueError("Path from --file argument don't exist")
+        raise ValueError(f"Path {args.files} from --file argument don't exist")
 
     return args.files, args.driver, args.desc
 
