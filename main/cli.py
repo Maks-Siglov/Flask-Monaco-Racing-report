@@ -8,7 +8,7 @@ def start_parser() -> tuple[str, str | None, bool]:
 
     :return: arguments for build parser
     """
-    FOLDER_DATA = r'.\data'
+    FOLDER_DATA = r'data/'
 
     parser = argparse.ArgumentParser(
                                     prog='Report_CLI',

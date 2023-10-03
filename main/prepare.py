@@ -5,7 +5,7 @@ import re
 
 PATTERN = re.compile(r'(^[A-Z]+)(\S+)')
 DATE_FORMAT = '%Y-%m-%d_%H:%M:%S.%f'
-FOLDER_DATA = r'.\data'
+FOLDER_DATA = r'data/'
 
 
 def prepare(folder_path: str = FOLDER_DATA) -> list[int,
