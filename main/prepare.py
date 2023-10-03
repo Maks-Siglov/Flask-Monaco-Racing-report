@@ -1,12 +1,10 @@
 from main.utils.utils import format_timedelta
 from main.utils.provider import read_log_files
-
 from datetime import datetime
 import re
 
 PATTERN = re.compile(r'(^[A-Z]+)(\S+)')
 DATE_FORMAT = '%Y-%m-%d_%H:%M:%S.%f'
-
 FOLDER_DATA = r'.\data'
 
 
@@ -25,7 +23,7 @@ tuple[str, str, tuple[int, float], str]]:
     return prepared_data
 
 
-def prepare_data(start_log, end_log, abbreviations_data) -> list[int,
+def prepare_data(start_log: str, end_log: str, abbreviations_data: str) -> list[int,
 tuple[str, str,tuple[int, float], str]]:
     """This function prepare data for print_report()
 

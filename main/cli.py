@@ -10,8 +10,10 @@ def start_parser() -> tuple[str, str | None, bool]:
     """
     FOLDER_DATA = r'.\data'
 
-    parser = argparse.ArgumentParser(prog='Report_CLI',
-                                     description='CLI for report')
+    parser = argparse.ArgumentParser(
+                                    prog='Report_CLI',
+                                    description='CLI for report'
+    )
 
     parser.add_argument(
                         '--files',
