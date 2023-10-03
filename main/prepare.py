@@ -8,8 +8,8 @@ DATE_FORMAT = '%Y-%m-%d_%H:%M:%S.%f'
 FOLDER_DATA = r'data/'
 
 
-def prepare(folder_path: str = FOLDER_DATA) -> list[int,
-tuple[str, str, tuple[int, float], str]]:
+def prepare(folder_path: str = FOLDER_DATA)\
+        -> list[int, tuple[str, str, tuple[int, float], str]]:
     """This function prepare data for web application
 
     :return: data which used for creating web application
@@ -23,8 +23,8 @@ tuple[str, str, tuple[int, float], str]]:
     return prepared_data
 
 
-def prepare_data(start_log: str, end_log: str, abbreviations_data: str) -> list[int,
-tuple[str, str,tuple[int, float], str]]:
+def prepare_data(start_log: str, end_log: str, abbreviations_data: str) ->\
+        tuple[str, str, tuple[int, float], str]:
     """This function prepare data for print_report()
 
     :param start_log: data about start time lap from log file

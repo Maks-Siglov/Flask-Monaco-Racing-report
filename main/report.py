@@ -60,8 +60,8 @@ def print_report(prepared_data: List[Tuple[str, str, Tuple[int, float], str]],
             print(row)
 
 
-def report_unique_driver(driver_name: str, prepared_data: List[Tuple[str, str,
-Tuple[int, float], str]]) -> None:
+def report_unique_driver(driver_name: str,
+    prepared_data: List[Tuple[str, str, Tuple[int, float], str]]) -> None:
     """This function build (print) report about unique driver
 
     :param driver_name: name of the driver
