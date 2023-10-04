@@ -1,5 +1,5 @@
+from flask import Flask, render_template, request, make_response, Response
 from main.prepare import prepare
-from flask import Flask, render_template, request, make_response
 
 TEMPLATE_FOLDER = r'..\templates'
 PREPARED_DATA = prepare()
@@ -31,7 +31,7 @@ def drivers_code() -> str:
 
 
 @app.route('/report/drivers/<driver_id>')
-def drivers_id(driver_id: int) -> str:
+def drivers_id(driver_id: int) -> str | Response:
     """Shows info about a driver.
 
     :param driver_id: id of the driver
@@ -46,8 +46,8 @@ def drivers_id(driver_id: int) -> str:
 
 
 @app.errorhandler(404)
-def not_found(error):
-    return render_template('404.html')
+def not_found(error) -> Response:
+    return make_response(render_template('404.html'), 404)
 
 
 if __name__ == '__main__':
