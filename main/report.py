@@ -9,8 +9,8 @@ INDEX_UNDERLINE_ASC = 16
 INDEX_UNDERLINE_DESC = 15
 
 
-def build_from_parser(args_files: str, args_driver: str, args_desc: bool)\
-        -> None:
+def build_from_parser(args_files: str, args_driver: str,
+                      args_desc: bool) -> None:
     """This function takes argument for parser and build report
 
     :param args_files: path to the data folder, argument from start_parser()
@@ -27,11 +27,13 @@ def build_from_parser(args_files: str, args_driver: str, args_desc: bool)\
         print_report(prepared_data, order)
 
     else:
-        report_unique_driver(args_driver, prepared_data)
+        report_unique_driver(prepared_data, args_driver)
 
 
-def print_report(prepared_data: list[tuple[int,
-tuple[str, str, tuple[int, float], str]]], order: bool = True) -> None:
+def print_report(
+    prepared_data: list[tuple[int, tuple[str, str, tuple[int, float], str]]],
+    order: bool = True
+) -> None:
     """This function build (print) report
 
     :param prepared_data: list with prepared data for report from build_report()
@@ -59,8 +61,10 @@ tuple[str, str, tuple[int, float], str]]], order: bool = True) -> None:
             print(row)
 
 
-def report_unique_driver(driver_name: str, prepared_data: list[tuple[int,
-tuple[str, str, tuple[int, float], str]]]) -> None:
+def report_unique_driver(
+    prepared_data: list[tuple[int, tuple[str, str, tuple[int, float], str]]],
+    driver_name: str
+) -> None:
     """This function build (print) report about unique driver
 
     :param driver_name: name of the driver

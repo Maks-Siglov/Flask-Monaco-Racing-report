@@ -23,8 +23,11 @@ def prepare(folder_path: str = FOLDER_DATA)\
     return prepared_data
 
 
-def _prepare_data(start_log: list[str], end_log: list[str],
-abbreviations_data: list[str]) -> tuple[str, str, tuple[int, float], str]:
+def _prepare_data(
+    start_log: list[str],
+    end_log: list[str],
+    abbreviations_data: list[str]
+) -> list[tuple[str, str, tuple[int, float], str]]:
     """This function prepare data for print_report()
 
     :param start_log: data about start time lap from log file
