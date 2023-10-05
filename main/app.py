@@ -22,7 +22,7 @@ def drivers_code() -> str:
 
     :return: render HTML template
     """
-    order = request.args.get('order', 'asc')
+    order = request.args.get('order', default='asc')
 
     if order == 'desc':
         PREPARED_DATA.reverse()
@@ -35,7 +35,7 @@ def drivers_id(driver_id: int) -> str | Response:
     """Shows info about a driver.
 
     :param driver_id: id of the driver
-    :return: render HTML template
+    :return: render HTML template, or a 404 error if driver not found
      """
     for index, item in PREPARED_DATA:
         if driver_id == item[3]:
@@ -47,6 +47,11 @@ def drivers_id(driver_id: int) -> str | Response:
 
 @app.errorhandler(404)
 def not_found(error) -> Response:
+    """andle a 404 Not Found error
+
+    :param error: the 404 error
+    :return a 404 error response, which contains custom error HTML page
+    """
     return make_response(render_template('404.html'), 404)
 
 

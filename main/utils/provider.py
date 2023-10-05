@@ -11,13 +11,13 @@ def read_log_files(folder_path: str) -> tuple[list[str], list[str], list[str]]:
     :return: function returns data from .log files and abbreviations.txt
     """
 
-    start_log = read_file(folder_path, START_LOG)
-    end_log = read_file(folder_path, END_LOG)
-    abbreviations_data = read_file(folder_path, ABBREVIATIONS)
+    start_log = _read_file(folder_path, START_LOG)
+    end_log = _read_file(folder_path, END_LOG)
+    abbreviations_data = _read_file(folder_path, ABBREVIATIONS)
     return start_log, end_log, abbreviations_data
 
 
-def read_file(folder_path: str, filename: str) -> list[str]:
+def _read_file(folder_path: str, filename: str) -> list[str]:
     """This function take filename and return data for it
 
     :param filename: name of file in data dir which contains data

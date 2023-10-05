@@ -1,5 +1,4 @@
 from main.prepare import prepare
-from typing import List, Tuple
 
 SEPARATOR_SYMBOL = '-'
 SEPARATOR_LENGTH = 62
@@ -31,8 +30,8 @@ def build_from_parser(args_files: str, args_driver: str, args_desc: bool)\
         report_unique_driver(args_driver, prepared_data)
 
 
-def print_report(prepared_data: List[Tuple[str, str, Tuple[int, float], str]],
-                 order: bool = True) -> None:
+def print_report(prepared_data: list[tuple[int,
+tuple[str, str, tuple[int, float], str]]], order: bool = True) -> None:
     """This function build (print) report
 
     :param prepared_data: list with prepared data for report from build_report()
@@ -60,8 +59,8 @@ def print_report(prepared_data: List[Tuple[str, str, Tuple[int, float], str]],
             print(row)
 
 
-def report_unique_driver(driver_name: str,
-    prepared_data: List[Tuple[str, str, Tuple[int, float], str]]) -> None:
+def report_unique_driver(driver_name: str, prepared_data: list[tuple[int,
+tuple[str, str, tuple[int, float], str]]]) -> None:
     """This function build (print) report about unique driver
 
     :param driver_name: name of the driver

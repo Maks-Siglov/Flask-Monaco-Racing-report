@@ -9,22 +9,22 @@ FOLDER_DATA = r'data/'
 
 
 def prepare(folder_path: str = FOLDER_DATA)\
-        -> list[int, tuple[str, str, tuple[int, float], str]]:
+        -> list[tuple[int, tuple[str, str, tuple[int, float], str]]]:
     """This function prepare data for web application
 
     :return: data which used for creating web application
     """
 
     start_log, end_log, abbreviations_data = read_log_files(folder_path)
-    prepared_data = prepare_data(start_log, end_log, abbreviations_data)
+    prepared_data = _prepare_data(start_log, end_log, abbreviations_data)
     prepared_data.sort(key=lambda x: x[2])
     prepared_data = list(enumerate(prepared_data, start=1))
 
     return prepared_data
 
 
-def prepare_data(start_log: str, end_log: str, abbreviations_data: str) ->\
-        tuple[str, str, tuple[int, float], str]:
+def _prepare_data(start_log: list[str], end_log: list[str],
+abbreviations_data: list[str]) -> tuple[str, str, tuple[int, float], str]:
     """This function prepare data for print_report()
 
     :param start_log: data about start time lap from log file
@@ -32,8 +32,8 @@ def prepare_data(start_log: str, end_log: str, abbreviations_data: str) ->\
     :param abbreviations_data: data from file contains abbreviation explanations
     :return: data for building (printing) report
     """
-    prepare_start = prepare_data_from_file(start_log)
-    prepare_end = prepare_data_from_file(end_log)
+    prepare_start = _prepare_data_from_file(start_log)
+    prepare_end = _prepare_data_from_file(end_log)
 
     prepared_data = []
     for param in abbreviations_data:
@@ -44,7 +44,7 @@ def prepare_data(start_log: str, end_log: str, abbreviations_data: str) ->\
     return prepared_data
 
 
-def prepare_data_from_file(file_data: str) -> dict[str, datetime]:
+def _prepare_data_from_file(file_data: list[str]) -> dict[str, datetime]:
     """This function takes data for file
 
     :param file_data: file where we take data

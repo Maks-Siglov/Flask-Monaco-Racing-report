@@ -2,13 +2,14 @@ from main.report import build_from_parser
 import argparse
 import os
 
+FOLDER_DATA = r'data/'
+
 
 def start_parser() -> tuple[str, str | None, bool]:
     """This function collecting argument for command line
 
     :return: arguments for build parser
     """
-    FOLDER_DATA = r'data/'
 
     parser = argparse.ArgumentParser(
                                     prog='Report_CLI',
@@ -27,8 +28,8 @@ def start_parser() -> tuple[str, str | None, bool]:
                         )
     parser.add_argument(
                         '--desc',
-                        action='store_true'
-                        , help='Sort in descending order.'
+                        action='store_true',
+                        help='Sort in descending order.'
                         )
     parser.add_argument(
                         '--driver',
