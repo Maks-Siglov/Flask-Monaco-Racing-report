@@ -18,7 +18,8 @@ def report() -> str:
 
 @app.route('/report/drivers/', methods=['GET'])
 def drivers() -> str | Response:
-    """Shows a list of driver's names and codes. Code is a link to info about drivers.
+    """Shows a list of driver's names and codes.
+     Code is a link to info about drivers.
 
     :return: render HTML template
     """
@@ -28,9 +29,9 @@ def drivers() -> str | Response:
     if order == 'desc':
         PREPARED_DATA.reverse()
 
-    if driver_id:
-        if not any([True for index, item in PREPARED_DATA if driver_id == item[3]]):
-            return make_response(render_template('404.html'), 404)
+    if driver_id and not any(
+            driver_id == item[3] for index, item in PREPARED_DATA):
+        return make_response(render_template('404.html'), 404)
 
     return render_template('drivers.html', prepared_data=PREPARED_DATA,
                            driver_id=driver_id)
