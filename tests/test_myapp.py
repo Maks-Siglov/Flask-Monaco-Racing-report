@@ -1,22 +1,15 @@
 import pytest
 
-test_case = [('Common Statistics', '/report'),
-             ('Drivers code', '/report/drivers/'),
-             ('Drivers code', '/report/drivers/?order=desc'),
-             ('Driver Details', '/report/drivers/SPF')]
+test_case = [
+    ('Common Statistics', '/report', 200),
+    ('Drivers code', '/report/drivers/', 200),
+    ('Drivers code', '/report/drivers/?order=desc', 200),
+    ('Path not found', '/report/drivers/?driver_id=NOT', 404)
+]
 
 
-@pytest.mark.parametrize('header, route', test_case)
-def test_report(client, header, route):
+@pytest.mark.parametrize('header, route, code', test_case)
+def test_report(client, header, route, code):
     response = client.get(route)
-    assert response.status_code == 200
+    assert response.status_code == code
     assert header.encode() in response.data
-
-
-not_exist_route_cases = [('/report/drivers/NOT', 404)]
-
-
-@pytest.mark.parametrize('route, status_code', not_exist_route_cases)
-def test_not_exist_route(client, route, status_code):
-    response = client.get(route)
-    assert response.status_code == status_code

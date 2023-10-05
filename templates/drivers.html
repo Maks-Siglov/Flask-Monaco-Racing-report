@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}
+    Drivers code
+{% endblock %}
+{% block body %}
+<h1>Drivers code</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Index</th>
+            <th>Name</th>
+            <th>Team</th>
+            <th>Lap time</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% if not driver_id %}
+        {% for index, item in prepared_data %}
+        <tr>
+            <td>{{ index }}.</td>
+            <td>{{ item[0] }}</td>
+            <td><a href="{{ url_for('drivers', driver_id=item[3]) }}">{{ item[3] }}</a></td>
+
+            <td>{{ item[2][0] }}:{{ item[2][1] }}</td>
+        </tr>
+        {% endfor %}
+    {% else %}
+        {% for index, item in prepared_data %}
+            {% if driver_id == item[3] %}
+                <tr>
+                    <td>{{ index }}.</td>
+                    <td>{{ item[0] }}</td>
+                    <td>{{ item[1] }}</td>
+                    <td>{{ item[2][0] }}:{{ item[2][1] }}</td>
+                </tr>
+            {% endif %}
+        {% endfor %}
+    {% endif %}
+    </tbody>
+</table>
+{% endblock %}

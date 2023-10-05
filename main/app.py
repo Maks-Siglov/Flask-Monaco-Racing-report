@@ -7,42 +7,33 @@ PREPARED_DATA = prepare()
 app = Flask(__name__, template_folder=TEMPLATE_FOLDER)
 
 
-@app.route('/report')
-def common_statistics() -> str:
+@app.route('/report', methods=['GET'])
+def report() -> str:
     """Shows common statistics in web application
 
     :return: render HTML template
     """
-    return render_template('statistics.html', prepared_data=PREPARED_DATA)
+    return render_template('report.html', prepared_data=PREPARED_DATA)
 
 
-@app.route('/report/drivers/')
-def drivers_code() -> str:
+@app.route('/report/drivers/', methods=['GET'])
+def drivers() -> str | Response:
     """Shows a list of driver's names and codes. Code is a link to info about drivers.
 
     :return: render HTML template
     """
     order = request.args.get('order', default='asc')
+    driver_id = request.args.get('driver_id')
 
     if order == 'desc':
         PREPARED_DATA.reverse()
 
-    return render_template('drivers_code.html', prepared_data=PREPARED_DATA)
+    if driver_id:
+        if not any([True for index, item in PREPARED_DATA if driver_id == item[3]]):
+            return make_response(render_template('404.html'), 404)
 
-
-@app.route('/report/drivers/<driver_id>')
-def drivers_id(driver_id: int) -> str | Response:
-    """Shows info about a driver.
-
-    :param driver_id: id of the driver
-    :return: render HTML template, or a 404 error if driver not found
-     """
-    for index, item in PREPARED_DATA:
-        if driver_id == item[3]:
-            return render_template('driver_id.html',
-                                   prepared_data=PREPARED_DATA, driver_id=driver_id)
-
-    return make_response(render_template('404.html'), 404)
+    return render_template('drivers.html', prepared_data=PREPARED_DATA,
+                           driver_id=driver_id)
 
 
 @app.errorhandler(404)
