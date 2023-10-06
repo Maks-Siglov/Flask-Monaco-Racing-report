@@ -1,4 +1,5 @@
 from main.prepare import prepare
+from main.utils.utils import LapTime
 
 SEPARATOR_SYMBOL = '-'
 SEPARATOR_LENGTH = 62
@@ -31,7 +32,7 @@ def build_from_parser(args_files: str, args_driver: str,
 
 
 def print_report(
-    prepared_data: list[tuple[int, tuple[str, str, tuple[int, float], str]]],
+    prepared_data: list[tuple[int, str, str, LapTime, str]],
     order: bool = True
 ) -> None:
     """This function build (print) report
@@ -46,12 +47,10 @@ def print_report(
         index_underline = INDEX_UNDERLINE_DESC
         prepared_data.reverse()
 
-    for position, item in prepared_data:
-        name, team, lap_time, _ = item
-        minutes, seconds = lap_time
+    for position, name, team, lap_time, _ in prepared_data:
         string_position = f'{position}.'
-        row = f'{string_position:<{INDEX_INDENT}} {name:<{NAME_INDENT}}' \
-              f' | {team:<{TEAM_INDENT}} | {minutes}:{seconds}'
+        row = (f'{string_position:<{INDEX_INDENT}} {name:<{NAME_INDENT}}'
+        f' | {team:<{TEAM_INDENT}} | {lap_time.minutes}:{lap_time.seconds}')
 
         if position != index_underline:
             print(row)
@@ -62,7 +61,7 @@ def print_report(
 
 
 def report_unique_driver(
-    prepared_data: list[tuple[int, tuple[str, str, tuple[int, float], str]]],
+    prepared_data: list[tuple[int, str, str, LapTime, str]],
     driver_name: str
 ) -> None:
     """This function build (print) report about unique driver
@@ -71,8 +70,7 @@ def report_unique_driver(
     :param prepared_data: data for report
     """
 
-    for position, item in prepared_data:
-        name, team, lap_time, _ = item
-        minutes, seconds = lap_time
+    for position, name, team, lap_time, _ in prepared_data:
         if driver_name == name:
-            print(f'{position}. {name} | {team} | {minutes}:{seconds}')
+            print(f'{position}. {name} | {team} |'
+                  f' {lap_time.minutes}:{lap_time.seconds}')

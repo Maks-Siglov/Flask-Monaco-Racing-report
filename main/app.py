@@ -7,12 +7,18 @@ PREPARED_DATA = prepare()
 app = Flask(__name__, template_folder=TEMPLATE_FOLDER)
 
 
+@app.route('/', methods=['GET'])
 @app.route('/report', methods=['GET'])
 def report() -> str:
     """Shows common statistics in web application
 
     :return: render HTML template
     """
+    order = request.args.get('order')
+
+    if order == 'desc':
+        PREPARED_DATA.reverse()
+
     return render_template('report.html', prepared_data=PREPARED_DATA)
 
 
@@ -23,14 +29,14 @@ def drivers() -> str | Response:
 
     :return: render HTML template
     """
-    order = request.args.get('order', default='asc')
+    order = request.args.get('order')
     driver_id = request.args.get('driver_id')
 
     if order == 'desc':
         PREPARED_DATA.reverse()
 
     if driver_id and not any(
-            driver_id == item[3] for index, item in PREPARED_DATA):
+            driver_id == code for _, _, _, _, code in PREPARED_DATA):
         return make_response(render_template('404.html'), 404)
 
     return render_template('drivers.html', prepared_data=PREPARED_DATA,

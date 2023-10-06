@@ -3,7 +3,7 @@
     Drivers info
 {% endblock %}
 {% block body %}
-<h1>Drivers code</h1>
+<h1>Drivers info</h1>
 <table>
     <thead>
         <tr>
@@ -15,23 +15,23 @@
     </thead>
     <tbody>
     {% if not driver_id %}
-        {% for index, item in prepared_data %}
+        {% for position, name, team, lap_time, code in prepared_data %}
         <tr>
-            <td>{{ index }}.</td>
-            <td>{{ item[0] }}</td>
-            <td><a href="{{ url_for('drivers', driver_id=item[3]) }}">{{ item[3] }}</a></td>
+            <td>{{ position }}.</td>
+            <td>{{ name }}</td>
+            <td><a href="{{ url_for('drivers', driver_id=code) }}">{{ code }}</a></td>
 
-            <td>{{ item[2][0] }}:{{ item[2][1] }}</td>
+            <td>{{ lap_time.minutes }}:{{ lap_time.seconds }}</td>
         </tr>
         {% endfor %}
     {% else %}
-        {% for index, item in prepared_data %}
-            {% if driver_id == item[3] %}
+        {% for position, name, team, lap_time, code in prepared_data %}
+            {% if driver_id == code %}
                 <tr>
-                    <td>{{ index }}.</td>
-                    <td>{{ item[0] }}</td>
-                    <td>{{ item[1] }}</td>
-                    <td>{{ item[2][0] }}:{{ item[2][1] }}</td>
+                    <td>{{ position }}.</td>
+                    <td>{{ name }}</td>
+                    <td>{{ team }}</td>
+                    <td>{{ lap_time.minutes }}:{{ lap_time.seconds }}</td>
                 </tr>
             {% endif %}
         {% endfor %}

@@ -1,4 +1,4 @@
-from main.utils.utils import format_timedelta
+from main.utils.utils import format_timedelta, LapTime
 from main.utils.provider import read_log_files
 from datetime import datetime
 import re
@@ -8,8 +8,8 @@ DATE_FORMAT = '%Y-%m-%d_%H:%M:%S.%f'
 FOLDER_DATA = r'data/'
 
 
-def prepare(folder_path: str = FOLDER_DATA)\
-        -> list[tuple[int, tuple[str, str, tuple[int, float], str]]]:
+def prepare(folder_path: str = FOLDER_DATA
+            ) -> list[tuple[int, str, str, LapTime, str]]:
     """This function prepare data for web application
 
     :return: data which used for creating web application
@@ -17,8 +17,9 @@ def prepare(folder_path: str = FOLDER_DATA)\
 
     start_log, end_log, abbreviations_data = read_log_files(folder_path)
     prepared_data = _prepare_data(start_log, end_log, abbreviations_data)
-    prepared_data.sort(key=lambda x: x[2])
+    prepared_data.sort(key=lambda item: item[2])
     prepared_data = list(enumerate(prepared_data, start=1))
+    prepared_data = [(index, *item) for index, item in prepared_data]
 
     return prepared_data
 
@@ -27,7 +28,7 @@ def _prepare_data(
     start_log: list[str],
     end_log: list[str],
     abbreviations_data: list[str]
-) -> list[tuple[str, str, tuple[int, float], str]]:
+) -> list[tuple[str, str, LapTime, str]]:
     """This function prepare data for print_report()
 
     :param start_log: data about start time lap from log file
