@@ -6,8 +6,7 @@ SEPARATOR_LENGTH = 62
 INDEX_INDENT = 3
 NAME_INDENT = 18
 TEAM_INDENT = 26
-INDEX_UNDERLINE_ASC = 16
-INDEX_UNDERLINE_DESC = 15
+INDEX_UNDERLINE = 15
 
 
 def build_from_parser(args_files: str, args_driver: str,
@@ -41,10 +40,8 @@ def print_report(
     :param order: shows in which order report should be
     if we use descending ordering
     """
-    if order:
-        index_underline = INDEX_UNDERLINE_ASC
-    else:
-        index_underline = INDEX_UNDERLINE_DESC
+    index_underline = INDEX_UNDERLINE + int(order)
+    if not order:
         prepared_data.reverse()
 
     for position, name, team, lap_time, _ in prepared_data:

@@ -27,7 +27,7 @@ def _read_file(folder_path: str, filename: str) -> list[str]:
 
     file_path = os.path.join(folder_path, filename)
     if not os.path.isfile(file_path):
-        raise ValueError(f"Path {file_path} don't exist")
+        raise ValueError(f"Path {file_path} from prepare() don't exist")
     with open(file_path, 'r') as f:
         result = f.read().splitlines()
     return result

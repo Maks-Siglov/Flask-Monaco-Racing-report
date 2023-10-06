@@ -10,7 +10,7 @@ FOLDER_DATA = r'data/'
 
 def prepare(folder_path: str = FOLDER_DATA
             ) -> list[tuple[int, str, str, LapTime, str]]:
-    """This function prepare data for web application
+    """This function prepare data for web application and report
 
     :return: data which used for creating web application
     """
@@ -29,7 +29,7 @@ def _prepare_data(
     end_log: list[str],
     abbreviations_data: list[str]
 ) -> list[tuple[str, str, LapTime, str]]:
-    """This function prepare data for print_report()
+    """This function prepare data for prepare()
 
     :param start_log: data about start time lap from log file
     :param end_log: data about end time lap from log file
@@ -49,7 +49,7 @@ def _prepare_data(
 
 
 def _prepare_data_from_file(file_data: list[str]) -> dict[str, datetime]:
-    """This function takes data for file
+    """This function takes data for file and prepare it
 
     :param file_data: file where we take data
     :return: dictionary, where abbreviation is key, start lap time - is value
