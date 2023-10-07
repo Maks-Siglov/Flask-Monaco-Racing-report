@@ -19,8 +19,8 @@ def prepare(folder_path: str = FOLDER_DATA) -> list[Driver]:
     driver_data = _prepare_data(start_log, end_log, abbreviations_data)
     drivers = sorted(driver_data.values(), key=lambda driver: driver.lap_time)
 
-    for position, driver in enumerate(drivers, start=1):
-        driver.position = position
+    for position, item in enumerate(drivers, start=1):
+        item.position = position
 
     return drivers
 
@@ -63,6 +63,3 @@ def _prepare_data_from_file(file_data: list[str]) -> dict[str, datetime]:
         prepare_result[abr] = datetime.strptime(time, DATE_FORMAT)
 
     return prepare_result
-
-data = prepare()
-print()
