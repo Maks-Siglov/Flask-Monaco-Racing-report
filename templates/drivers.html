@@ -14,26 +14,29 @@
         </tr>
     </thead>
     <tbody>
-    {% if not driver_id %}
-        {% for position, name, team, lap_time, code in prepared_data %}
-        <tr>
-            <td>{{ position }}.</td>
-            <td>{{ name }}</td>
-            <td><a href="{{ url_for('drivers', driver_id=code) }}">{{ code }}</a></td>
 
-            <td>{{ lap_time.minutes }}:{{ lap_time.seconds }}</td>
-        </tr>
-        {% endfor %}
-    {% else %}
-        {% for position, name, team, lap_time, code in prepared_data %}
-            {% if driver_id == code %}
+    {% if driver_id %}
+        {% for driver in prepared_data %}
+            {% if driver_id == driver.abr %}
                 <tr>
-                    <td>{{ position }}.</td>
-                    <td>{{ name }}</td>
-                    <td>{{ team }}</td>
-                    <td>{{ lap_time.minutes }}:{{ lap_time.seconds }}</td>
+                    <td>{{ driver.position }}.</td>
+                    <td>{{ driver.name }}</td>
+                    <td>{{ driver.team }}</td>
+                    <td>{{ driver.lap_time.minutes }}:{{ driver.lap_time.seconds }}</td>
                 </tr>
             {% endif %}
+        {% endfor %}
+    {% else %}
+
+        {% for driver in prepared_data %}
+        <tr>
+            <td>{{ driver.position }}.</td>
+            <td>{{ driver.name }}</td>
+            <td><a href="{{ url_for('drivers', driver_id=driver.abr) }}">{{ driver.abr }}</a></td>
+
+            <td>{{ driver.lap_time.minutes }}:{{ driver.lap_time.seconds }}</td>
+        </tr>
+
         {% endfor %}
     {% endif %}
     </tbody>

@@ -16,12 +16,12 @@
         </tr>
     </thead>
     <tbody>
-        {% for position, name, team, lap_time, _ in prepared_data %}
+        {% for driver in prepared_data %}
         <tr>
-            <td>{{ position }}.</td>
-            <td>{{ name }}</td>
-            <td>{{ team }}</td>
-            <td>{{ lap_time.minutes }}:{{ lap_time.seconds }}</td>
+            <td>{{ driver.position }}.</td>
+            <td>{{ driver.name }}</td>
+            <td>{{ driver.team }}</td>
+            <td>{{ driver.lap_time.minutes }}:{{ driver.lap_time.seconds }}</td>
         </tr>
         {% endfor %}
     </tbody>

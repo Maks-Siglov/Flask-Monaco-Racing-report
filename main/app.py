@@ -36,7 +36,7 @@ def drivers() -> str | Response:
         PREPARED_DATA.reverse()
 
     if driver_id and not any(
-            driver_id == code for _, _, _, _, code in PREPARED_DATA):
+            driver_id == driver.abr for driver in PREPARED_DATA):
         return make_response(render_template('404.html'), 404)
 
     return render_template('drivers.html', prepared_data=PREPARED_DATA,

@@ -1,5 +1,5 @@
 from main.prepare import prepare
-from main.utils.utils import LapTime
+from main.models import Driver
 
 SEPARATOR_SYMBOL = '-'
 SEPARATOR_LENGTH = 62
@@ -30,10 +30,7 @@ def build_from_parser(args_files: str, args_driver: str,
         report_unique_driver(prepared_data, args_driver)
 
 
-def print_report(
-    prepared_data: list[tuple[int, str, str, LapTime, str]],
-    order: bool = True
-) -> None:
+def print_report(prepared_data: list[Driver], order: bool = True) -> None:
     """This function build (print) report
 
     :param prepared_data: list with prepared data for report from build_report()
@@ -44,12 +41,13 @@ def print_report(
     if not order:
         prepared_data.reverse()
 
-    for position, name, team, lap_time, _ in prepared_data:
-        string_position = f'{position}.'
-        row = (f'{string_position:<{INDEX_INDENT}} {name:<{NAME_INDENT}}'
-        f' | {team:<{TEAM_INDENT}} | {lap_time.minutes}:{lap_time.seconds}')
+    for driver in prepared_data:
+        string_position = f'{driver.position}.'
+        row = (f'{string_position:<{INDEX_INDENT}} {driver.name:<{NAME_INDENT}}'
+               f' {driver.team:<{TEAM_INDENT}} | '
+               f'{driver.lap_time.minutes}:{driver.lap_time.seconds}')
 
-        if position != index_underline:
+        if driver.position != index_underline:
             print(row)
 
         else:
@@ -57,17 +55,14 @@ def print_report(
             print(row)
 
 
-def report_unique_driver(
-    prepared_data: list[tuple[int, str, str, LapTime, str]],
-    driver_name: str
-) -> None:
+def report_unique_driver(prepared_data: list[Driver], driver_name: str) -> None:
     """This function build (print) report about unique driver
 
     :param driver_name: name of the driver
     :param prepared_data: data for report
     """
 
-    for position, name, team, lap_time, _ in prepared_data:
-        if driver_name == name:
-            print(f'{position}. {name} | {team} |'
-                  f' {lap_time.minutes}:{lap_time.seconds}')
+    for driver in prepared_data:
+        if driver_name == driver.name:
+            print(f'{driver.position}. {driver.name} | {driver.team} |'
+                  f' {driver.lap_time.minutes}:{driver.lap_time.seconds}')

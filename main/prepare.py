@@ -1,5 +1,6 @@
-from main.utils.utils import format_timedelta, LapTime
+from main.utils.utils import format_timedelta
 from main.utils.provider import read_log_files
+from main.models import Driver
 from datetime import datetime
 import re
 
@@ -8,27 +9,24 @@ DATE_FORMAT = '%Y-%m-%d_%H:%M:%S.%f'
 FOLDER_DATA = r'data/'
 
 
-def prepare(folder_path: str = FOLDER_DATA
-            ) -> list[tuple[int, str, str, LapTime, str]]:
+def prepare(folder_path: str = FOLDER_DATA) -> list[Driver]:
     """This function prepare data for web application and report
 
     :return: data which used for creating web application
     """
 
     start_log, end_log, abbreviations_data = read_log_files(folder_path)
-    prepared_data = _prepare_data(start_log, end_log, abbreviations_data)
-    prepared_data.sort(key=lambda item: item[2])
-    prepared_data = list(enumerate(prepared_data, start=1))
-    prepared_data = [(index, *item) for index, item in prepared_data]
+    driver_data = _prepare_data(start_log, end_log, abbreviations_data)
+    drivers = sorted(driver_data.values(), key=lambda driver: driver.lap_time)
 
-    return prepared_data
+    for position, driver in enumerate(drivers, start=1):
+        driver.position = position
+
+    return drivers
 
 
-def _prepare_data(
-    start_log: list[str],
-    end_log: list[str],
-    abbreviations_data: list[str]
-) -> list[tuple[str, str, LapTime, str]]:
+def _prepare_data(start_log: list[str], end_log: list[str],
+                  abbreviations_data: list[str]) -> dict[str, Driver]:
     """This function prepare data for prepare()
 
     :param start_log: data about start time lap from log file
@@ -39,13 +37,15 @@ def _prepare_data(
     prepare_start = _prepare_data_from_file(start_log)
     prepare_end = _prepare_data_from_file(end_log)
 
-    prepared_data = []
+    driver_data = {}
     for param in abbreviations_data:
         abr, name, team = param.strip().split('_')
         lap_time = format_timedelta(prepare_end[abr] - prepare_start[abr])
-        prepared_data.append((name, team, lap_time, abr))
+        driver_data[abr] = Driver(
+            abr=abr, name=name, team=team, lap_time=lap_time
+        )
 
-    return prepared_data
+    return driver_data
 
 
 def _prepare_data_from_file(file_data: list[str]) -> dict[str, datetime]:
@@ -63,3 +63,6 @@ def _prepare_data_from_file(file_data: list[str]) -> dict[str, datetime]:
         prepare_result[abr] = datetime.strptime(time, DATE_FORMAT)
 
     return prepare_result
+
+data = prepare()
+print()
