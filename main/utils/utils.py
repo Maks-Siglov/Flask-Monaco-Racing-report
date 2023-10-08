@@ -1,7 +1,5 @@
 from datetime import timedelta
-from collections import namedtuple
-
-LapTime = namedtuple('LapTime', ['minutes', 'seconds'])
+from main.models import LapTime
 
 
 def format_timedelta(timedelta_obj: timedelta) -> LapTime:

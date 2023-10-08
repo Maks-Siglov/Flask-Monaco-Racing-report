@@ -2,7 +2,7 @@ import pytest
 
 test_case = [
     ('Common Statistics', '/', 200),
-    ('Common Statistics', '/report', 200),
+    ('Common Statistics', '/report/', 200),
     ('Drivers info', '/report/drivers/', 200),
     ('Drivers info', '/report/drivers/?order=desc', 200),
     ('Path not found', '/report/drivers/?driver_id=NOT', 404)

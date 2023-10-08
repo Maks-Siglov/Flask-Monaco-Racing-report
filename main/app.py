@@ -8,7 +8,7 @@ app = Flask(__name__, template_folder=TEMPLATE_FOLDER)
 
 
 @app.route('/', methods=['GET'])
-@app.route('/report', methods=['GET'])
+@app.route('/report/', methods=['GET'])
 def report() -> str:
     """Shows common statistics in web application
 

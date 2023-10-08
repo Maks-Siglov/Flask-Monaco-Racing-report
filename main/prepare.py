@@ -17,7 +17,7 @@ def prepare(folder_path: str = FOLDER_DATA) -> list[Driver]:
 
     start_log, end_log, abbreviations_data = read_log_files(folder_path)
     driver_data = _prepare_data(start_log, end_log, abbreviations_data)
-    drivers = sorted(driver_data.values(), key=lambda driver: driver.lap_time)
+    drivers = sorted(driver_data.values())
 
     for position, item in enumerate(drivers, start=1):
         item.position = position
