@@ -1,8 +1,8 @@
-from main.report import build_from_parser
+from app.bl.report import build_from_parser
 import argparse
 import os
 
-FOLDER_DATA = r'data/'
+FOLDER_DATA = r'app/bl/data'
 
 
 def start_parser() -> tuple[str, str | None, bool]:

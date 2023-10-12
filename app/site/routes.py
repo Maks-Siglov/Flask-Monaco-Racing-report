@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, make_response, Response
-from main.prepare import prepare
+from app.bl.prepare import prepare
 
 PREPARED_DATA = prepare()
 

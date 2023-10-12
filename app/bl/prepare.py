@@ -1,12 +1,12 @@
-from main.utils.utils import format_timedelta
-from main.utils.provider import read_log_files
-from main.models import Driver
+from app.bl.utils.utils import format_timedelta
+from app.bl.utils.provider import read_log_files
+from app.bl.models import Driver
 from datetime import datetime
 import re
 
 PATTERN = re.compile(r'(^[A-Z]+)(\S+)')
 DATE_FORMAT = '%Y-%m-%d_%H:%M:%S.%f'
-FOLDER_DATA = r'data/'
+FOLDER_DATA = r'app/bl/data'
 
 
 def prepare(folder_path: str = FOLDER_DATA) -> list[Driver]:

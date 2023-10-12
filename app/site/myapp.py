@@ -1,8 +1,8 @@
 from flask import Flask
-from main.report_routes import router as report_routes
-from main.report_routes import error as error_routes
+from app.site.routes import router as report_routes
+from app.site.routes import error as error_routes
 
-TEMPLATE_FOLDER = r'..\templates'
+TEMPLATE_FOLDER = 'templates'
 
 app = Flask(__name__, template_folder=TEMPLATE_FOLDER)
 
