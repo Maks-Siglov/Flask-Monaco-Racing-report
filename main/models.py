@@ -6,7 +6,7 @@ from typing import Self
 class LapTime:
     minutes: int
     seconds: float
-    __for_sort: tuple[bool, tuple[int, float]] = field(init=False, repr=False)
+    __for_sort: tuple = field(init=False, repr=False)
 
     def __post_init__(self):
         self.__for_sort = (self.minutes <= 0, (abs(self.minutes), self.seconds))
