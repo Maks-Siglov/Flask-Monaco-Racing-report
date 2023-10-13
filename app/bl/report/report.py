@@ -1,5 +1,5 @@
-from app.bl.prepare import prepare
-from app.bl.models import Driver
+from app.bl.report.prepare import prepare
+from app.bl.report.models import Driver
 
 SEPARATOR_SYMBOL = '-'
 SEPARATOR_LENGTH = 62

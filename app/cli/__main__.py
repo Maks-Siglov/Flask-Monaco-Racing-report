@@ -1,4 +1,4 @@
-from app.bl.report import build_from_parser
+from app.bl.report.report import build_from_parser
 import argparse
 import os
 

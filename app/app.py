@@ -2,7 +2,7 @@ from flask import Flask
 from app.site.routes import router as report_routes
 from app.site.routes import error as error_routes
 
-TEMPLATE_FOLDER = 'templates'
+TEMPLATE_FOLDER = 'site/templates'
 
 app = Flask(__name__, template_folder=TEMPLATE_FOLDER)
 

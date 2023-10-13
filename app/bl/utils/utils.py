@@ -1,5 +1,5 @@
 from datetime import timedelta
-from app.bl.models import LapTime
+from app.bl.report.models import LapTime
 
 
 def format_timedelta(timedelta_obj: timedelta) -> LapTime:
