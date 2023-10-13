@@ -1,5 +1,5 @@
-from app.bl.utils.utils import format_timedelta
-from app.bl.utils.provider import read_log_files
+from app.bl.report.utils.utils import format_timedelta
+from app.bl.report.utils.provider import read_log_files
 from app.bl.report.models import Driver
 from datetime import datetime
 import re
