@@ -3,12 +3,12 @@ from app.bl.report.prepare import prepare
 
 PREPARED_DATA = prepare()
 
-router = Blueprint('router', __name__)
-error = Blueprint('errors', __name__)
+report_bp = Blueprint('report', __name__)
+error_bp = Blueprint('errors', __name__)
 
 
-@router.route('/', methods=['GET'])
-@router.route('/report/', methods=['GET'])
+@report_bp.route('/', methods=['GET'])
+@report_bp.route('/report/', methods=['GET'])
 def report() -> str:
     """Shows common statistics in web application
 
@@ -22,7 +22,7 @@ def report() -> str:
     return render_template('report.html', prepared_data=PREPARED_DATA)
 
 
-@router.route('/report/drivers/', methods=['GET'])
+@report_bp.route('/report/drivers/', methods=['GET'])
 def drivers() -> str | Response:
     """Shows a list of driver's names and codes.
      Code is a link to info about drivers.
@@ -43,7 +43,7 @@ def drivers() -> str | Response:
                            driver_id=driver_id)
 
 
-@error.errorhandler(404)
+@error_bp.app_errorhandler(404)
 def not_found(error) -> Response:
     """andle a 404 Not Found error
 

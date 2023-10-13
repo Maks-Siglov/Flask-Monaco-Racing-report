@@ -1,13 +1,13 @@
 from flask import Flask
-from app.site.routes import router as report_routes
-from app.site.routes import error as error_routes
+from app.site.routes import report_bp
+from app.site.routes import error_bp
 
 TEMPLATE_FOLDER = 'site/templates'
 
 app = Flask(__name__, template_folder=TEMPLATE_FOLDER)
 
-app.register_blueprint(report_routes)
-app.register_blueprint(error_routes)
+app.register_blueprint(report_bp)
+app.register_blueprint(error_bp)
 
 
 if __name__ == '__main__':
