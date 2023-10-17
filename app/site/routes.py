@@ -23,7 +23,7 @@ def report() -> str:
 
 
 @report_bp.route('/report/drivers/', methods=['GET'])
-def drivers() -> str | Response:
+def drivers() -> str:
     """Shows a list of driver's names and codes.
      Code is a link to info about drivers.
 
@@ -37,7 +37,7 @@ def drivers() -> str | Response:
     return render_template('drivers.html', prepared_data=PREPARED_DATA)
 
 
-@report_bp.route('/report/drivers/<driver_id>', methods=['GET'])
+@report_bp.route('/report/drivers/<string:driver_id>', methods=['GET'])
 def unique_driver(driver_id) -> str | Response:
     """Shows a statistics about unique driver
 
