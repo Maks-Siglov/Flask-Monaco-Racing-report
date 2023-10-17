@@ -5,6 +5,7 @@ routes_test_case = [
     ('Common Statistics', '/report/', 200),
     ('Drivers info', '/report/drivers/', 200),
     ('Drivers info', '/report/drivers/?order=desc', 200),
+    ('Driver Statistics', '/report/drivers/SPF', 200)
 ]
 
 
@@ -15,7 +16,7 @@ def test_report(client, header, route, expected_code):
     assert header.encode() in response.data
 
 
-test_case_404 = [('Path not found', '/report/drivers/?driver_id=NOT', 404)]
+test_case_404 = [('Path not found', '/report/drivers/NOT', 404)]
 
 
 @pytest.mark.parametrize('header, route, expected_code', test_case_404)

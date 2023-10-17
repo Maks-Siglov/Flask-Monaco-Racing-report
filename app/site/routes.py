@@ -30,17 +30,26 @@ def drivers() -> str | Response:
     :return: render HTML template
     """
     order = request.args.get('order')
-    driver_id = request.args.get('driver_id')
 
     if order == 'desc':
         PREPARED_DATA.reverse()
 
-    if driver_id and not any(
-            driver_id == driver.abr for driver in PREPARED_DATA):
+    return render_template('drivers.html', prepared_data=PREPARED_DATA)
+
+
+@report_bp.route('/report/drivers/<driver_id>', methods=['GET'])
+def unique_driver(driver_id) -> str | Response:
+    """Shows a statistics about unique driver
+
+    :param driver_id: driver abbreviation
+    :return: render HTML template or Response if driver not exist in report
+    """
+
+    if not any(driver_id == driver.abr for driver in PREPARED_DATA):
         return make_response(render_template('404.html'), 404)
 
-    return render_template('drivers.html', prepared_data=PREPARED_DATA,
-                           driver_id=driver_id)
+    return render_template('unique_driver.html',
+                           prepared_data=PREPARED_DATA, driver_id=driver_id)
 
 
 @error_bp.app_errorhandler(404)
