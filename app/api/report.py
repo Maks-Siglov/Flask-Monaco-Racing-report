@@ -1,10 +1,12 @@
 from app.app import app
 from app.bl.report.prepare import prepare
-from app.api.utils import (
+from app.api.utils.json_format import (
     json_data_for_report,
-    json_data_for_driver,
-    xml_response_for_report,
-    xml_response_for_driver
+    json_data_for_driver
+)
+from app.api.utils.xml_format import (
+    xml_response_for_driver,
+    xml_response_for_report
 )
 from flask import make_response, render_template, Response
 from flask_restful import Api, Resource, reqparse
