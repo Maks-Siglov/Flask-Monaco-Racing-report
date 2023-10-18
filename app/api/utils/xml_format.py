@@ -4,12 +4,29 @@ from flask import make_response, Response
 
 
 def xml_response_for_report(prepared_data: list[Driver]) -> Response:
+    root = ElementTree.Element('report')
+
+    for driver in prepared_data:
+        abr_element = ElementTree.SubElement(root, 'abr')
+        name = ElementTree.SubElement(abr_element, 'name')
+        team = ElementTree.SubElement(abr_element, 'team')
+
+        abr_element.text = driver.abr
+        name.text = driver.name
+        team.text = driver.team
+
+    response = make_response(
+        ElementTree.tostring(root, encoding='utf-8').decode())
+    response.headers['Content-Type'] = 'application/xml'
+
+    return response
+
+
+def xml_response_for_drivers(prepared_data: list[Driver]) -> Response:
     root = ElementTree.Element('drivers')
 
     for driver in prepared_data:
-        driver_element = ElementTree.SubElement(root, 'driver')
-
-        _prepare_driver_for_xml(driver_element, driver)
+        _prepare_driver_xml(root, driver)
 
     response = make_response(
         ElementTree.tostring(root, encoding='utf-8').decode())
@@ -21,7 +38,7 @@ def xml_response_for_report(prepared_data: list[Driver]) -> Response:
 def xml_response_for_driver(driver: Driver) -> Response:
     root = ElementTree.Element('driver')
 
-    _prepare_driver_for_xml(root, driver)
+    _prepare_driver_xml(root, driver)
 
     response = make_response(
         ElementTree.tostring(root, encoding='utf-8').decode())
@@ -30,19 +47,13 @@ def xml_response_for_driver(driver: Driver) -> Response:
     return response
 
 
-def _prepare_driver_for_xml(root: ElementTree.Element, driver: Driver) -> None:
+def _prepare_driver_xml(root: ElementTree.Element, driver: Driver) -> None:
+    name_element = ElementTree.SubElement(root, 'name')
+    team = ElementTree.SubElement(name_element, 'team')
+    position = ElementTree.SubElement(name_element, 'position')
+    lap_time = ElementTree.SubElement(name_element, 'lap_time')
 
-    position = ElementTree.SubElement(root, 'position')
-    abr = ElementTree.SubElement(root, 'abr')
-    name = ElementTree.SubElement(root, 'name')
-    team = ElementTree.SubElement(root, 'team')
-    lap_time_element = ElementTree.SubElement(root, 'lap_time')
-    minutes = ElementTree.SubElement(lap_time_element, 'minutes')
-    seconds = ElementTree.SubElement(lap_time_element, 'seconds')
-
-    position.text = str(driver.position)
-    abr.text = driver.abr
-    name.text = driver.name
+    name_element.text = driver.name
     team.text = driver.team
-    minutes.text = str(driver.lap_time.minutes)
-    seconds.text = str(driver.lap_time.seconds)
+    position.text = str(driver.position)
+    lap_time.text = str(driver.lap_time.total_seconds)

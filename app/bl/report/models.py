@@ -8,6 +8,10 @@ class LapTime:
     seconds: float
     __for_sort: tuple = field(init=False, repr=False)
 
+    @property
+    def total_seconds(self):
+        return round(self.minutes * 60 + self.seconds, 3)
+
     def __post_init__(self):
         self.__for_sort = (self.minutes <= 0, (abs(self.minutes), self.seconds))
 
