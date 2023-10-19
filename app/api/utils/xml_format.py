@@ -3,7 +3,7 @@ from xml.etree import ElementTree
 from flask import make_response, Response
 
 
-def xml_response_for_report(prepared_data: list[Driver]) -> Response:
+def xml_response_api_report(prepared_data: list[Driver]) -> Response:
     root = ElementTree.Element('report')
 
     for driver in prepared_data:
@@ -22,7 +22,7 @@ def xml_response_for_report(prepared_data: list[Driver]) -> Response:
     return response
 
 
-def xml_response_for_drivers(prepared_data: list[Driver]) -> Response:
+def xml_response_api_drivers(prepared_data: list[Driver]) -> Response:
     root = ElementTree.Element('drivers')
 
     for driver in prepared_data:
@@ -35,7 +35,7 @@ def xml_response_for_drivers(prepared_data: list[Driver]) -> Response:
     return response
 
 
-def xml_response_for_driver(driver: Driver) -> Response:
+def xml_response_api_driver(driver: Driver) -> Response:
     root = ElementTree.Element('driver')
 
     _prepare_driver_xml(root, driver)
