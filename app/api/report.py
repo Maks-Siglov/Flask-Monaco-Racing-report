@@ -1,4 +1,3 @@
-from app.app import app
 from app.bl.report.prepare import prepare
 from app.api.utils.json_format import (
     json_response_api_report,
@@ -11,9 +10,7 @@ from app.api.utils.xml_format import (
     xml_response_api_driver
 )
 from flask import make_response, render_template, Response
-from flask_restful import Api, Resource, reqparse
-
-api = Api(app)
+from flask_restful import Resource, reqparse
 
 PREPARED_DATA = prepare()
 
@@ -143,12 +140,3 @@ class UniqueDriver(Resource):
                 return json_response_api_driver(driver)
 
         return make_response(render_template('404.html'), 404)
-
-
-api.add_resource(Report, '/api/v1/report')
-api.add_resource(Drivers, '/api/v1/report/drivers/')
-api.add_resource(UniqueDriver, '/api/v1/report/drivers/<string:driver_id>/')
-
-
-if __name__ == '__main__':
-    app.run(debug=True)
