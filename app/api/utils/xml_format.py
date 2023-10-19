@@ -4,6 +4,7 @@ from flask import make_response, Response
 
 
 def xml_response_api_report(prepared_data: list[Driver]) -> Response:
+    """This function generate xml response for /api/v1/report/?format=xml"""
     root = ElementTree.Element('report')
 
     for driver in prepared_data:
@@ -23,10 +24,14 @@ def xml_response_api_report(prepared_data: list[Driver]) -> Response:
 
 
 def xml_response_api_drivers(prepared_data: list[Driver]) -> Response:
+    """This function generate xml response for
+    /api/v1/report/drivers/?format=xml
+     """
     root = ElementTree.Element('drivers')
 
     for driver in prepared_data:
-        _prepare_driver_xml(root, driver)
+        driver_element = ElementTree.SubElement(root, 'driver')
+        _prepare_driver_xml(driver_element, driver)
 
     response = make_response(
         ElementTree.tostring(root, encoding='utf-8').decode())
@@ -36,24 +41,33 @@ def xml_response_api_drivers(prepared_data: list[Driver]) -> Response:
 
 
 def xml_response_api_driver(driver: Driver) -> Response:
-    root = ElementTree.Element('driver')
+    """This function generate xml response for
+     /api/v1/report/drivers/<string:driver_id>/?format=xml
+     """
+    driver_element = ElementTree.Element('driver')
 
-    _prepare_driver_xml(root, driver)
+    _prepare_driver_xml(driver_element, driver)
 
     response = make_response(
-        ElementTree.tostring(root, encoding='utf-8').decode())
+        ElementTree.tostring(driver_element, encoding='utf-8').decode())
     response.headers['Content-Type'] = 'application/xml'
 
     return response
 
 
-def _prepare_driver_xml(root: ElementTree.Element, driver: Driver) -> None:
-    name_element = ElementTree.SubElement(root, 'name')
-    team = ElementTree.SubElement(name_element, 'team')
-    position = ElementTree.SubElement(name_element, 'position')
-    lap_time = ElementTree.SubElement(name_element, 'lap_time')
+def _prepare_driver_xml(driver_element: ElementTree.Element,
+                        driver: Driver) -> None:
+    """This function prepare xml data about single driver, it takes
+     driver_element, add subElements and value (text) to them for forming xml
+     tree for xml_response_api_drivers/driver
 
-    name_element.text = driver.name
+     :param driver_element: element to whom we add subElements and value
+     """
+    team = ElementTree.SubElement(driver_element, 'team')
+    position = ElementTree.SubElement(driver_element, 'position')
+    lap_time = ElementTree.SubElement(driver_element, 'lap_time')
+
+    driver_element.text = driver.name
     team.text = driver.team
     position.text = str(driver.position)
     lap_time.text = str(driver.lap_time.total_seconds)
