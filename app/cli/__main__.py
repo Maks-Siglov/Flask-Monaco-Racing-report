@@ -1,6 +1,7 @@
-from app.bl.report.report import build_from_parser
 import argparse
 import os
+
+from app.bl.report.report import build_from_parser
 
 FOLDER_DATA = r'app/bl/data'
 

@@ -1,5 +1,6 @@
-from app.bl.report.models import Driver
 from flask import make_response, jsonify, Response
+
+from app.bl.report.models import Driver
 
 
 def json_response_api_report(prepared_data: list[Driver]) -> Response:

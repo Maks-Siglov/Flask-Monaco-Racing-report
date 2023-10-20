@@ -1,4 +1,5 @@
 from datetime import timedelta
+
 from app.bl.report.models import LapTime
 
 

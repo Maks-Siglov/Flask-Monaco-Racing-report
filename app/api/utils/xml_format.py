@@ -1,6 +1,7 @@
-from app.bl.report.models import Driver
-from xml.etree import ElementTree
 from flask import make_response, Response
+from xml.etree import ElementTree
+
+from app.bl.report.models import Driver
 
 
 def xml_response_api_report(prepared_data: list[Driver]) -> Response:
@@ -58,8 +59,8 @@ def xml_response_api_driver(driver: Driver) -> Response:
 def _prepare_driver_xml(driver_element: ElementTree.Element,
                         driver: Driver) -> None:
     """This function prepare xml data about single driver, it takes
-     driver_element, add subElements and value (text) to them for forming xml
-     tree for xml_response_api_drivers/driver
+     driver_element (element of xml ElementTree), add subElements and value
+      (text) to it for forming xml tree for xml_response_api_drivers/driver
 
      :param driver_element: element to whom we add subElements and value
      """

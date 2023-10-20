@@ -1,3 +1,6 @@
+from flask import make_response, render_template, Response
+from flask_restful import Resource, reqparse
+
 from app.bl.report.prepare import prepare
 from app.api.utils.json_format import (
     json_response_api_report,
@@ -9,8 +12,6 @@ from app.api.utils.xml_format import (
     xml_response_api_drivers,
     xml_response_api_driver
 )
-from flask import make_response, render_template, Response
-from flask_restful import Resource, reqparse
 
 PREPARED_DATA = prepare()
 
