@@ -3,13 +3,15 @@ import math
 import json
 
 DRIVER_AMOUNT = 19
+API_REPORT_ROUT = '/api/v1/report/'
+API_DRIVERS_ROUT = '/api/v1/report/drivers/'
 
 abr_cases = ['BHS', 'MES', 'VBM']
 
 
 @pytest.mark.parametrize('abr', abr_cases)
 def test_json_api_report(client, abr):
-    response = client.get('/api/v1/report/')
+    response = client.get(API_REPORT_ROUT)
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'application/json'
     data = json.loads(response.data)
@@ -22,7 +24,7 @@ name_cases = ['Brendon Hartley', 'Marcus Ericsson', 'Valtteri Bottas']
 
 @pytest.mark.parametrize('name', name_cases)
 def test_json_api_drivers(client, name):
-    response = client.get('/api/v1/report/drivers/')
+    response = client.get(API_DRIVERS_ROUT)
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'application/json'
     data = json.loads(response.data)
@@ -41,7 +43,7 @@ json_driver_test_case = [
 
 @pytest.mark.parametrize('abr, name, position, lap_time', json_driver_test_case)
 def test_json_api_driver(client, abr, name, position, lap_time):
-    response = client.get(f'/api/v1/report/drivers/{abr}/')
+    response = client.get(f'{API_DRIVERS_ROUT}{abr}/')
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'application/json'
     data = json.loads(response.data)

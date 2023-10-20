@@ -2,6 +2,8 @@ import pytest
 from xml.etree import ElementTree
 
 DRIVER_AMOUNT = 19
+API_XML_REPORT_ROUT = '/api/v1/report/?format=xml'
+API_XML_DRIVERS_ROUT = '/api/v1/report/drivers/?format=xml'
 
 xml_api_test_case = [
     (0, 'SVF', 'Sebastian Vettel'),
@@ -12,7 +14,7 @@ xml_api_test_case = [
 
 @pytest.mark.parametrize('position, abr, _', xml_api_test_case)
 def test_xml_api_report(client, position, abr, _):
-    response = client.get('/api/v1/report/?format=xml')
+    response = client.get(API_XML_REPORT_ROUT)
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'application/xml'
 
@@ -25,7 +27,7 @@ def test_xml_api_report(client, position, abr, _):
 
 @pytest.mark.parametrize('position, _, name', xml_api_test_case)
 def test_xml_api_drivers(client, position, _, name):
-    response = client.get('/api/v1/report/drivers/?format=xml')
+    response = client.get(API_XML_DRIVERS_ROUT)
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'application/xml'
 

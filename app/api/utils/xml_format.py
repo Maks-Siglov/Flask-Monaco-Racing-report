@@ -60,7 +60,7 @@ def _prepare_driver_xml(driver_element: ElementTree.Element,
                         driver: Driver) -> None:
     """This function prepare xml data about single driver, it takes
      driver_element (element of xml ElementTree), add subElements and value
-      (text) to it for forming xml tree for xml_response_api_drivers/driver
+    (text) to it for forming xml tree for xml_response_api_drivers/driver
 
      :param driver_element: element to whom we add subElements and value
      """
