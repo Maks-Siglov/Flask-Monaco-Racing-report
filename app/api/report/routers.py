@@ -1,7 +1,7 @@
-from flask import make_response, render_template, Response
+from flask import make_response, render_template, Response, g
 from flask_restful import Resource, reqparse
+from flask_caching import Cache
 
-from app.api import PREPARED_DATA
 from app.api.report.response.json import (
     json_response_api_report,
     json_response_api_drivers,
@@ -16,6 +16,8 @@ from app.api.report.response.xml import (
 parser = reqparse.RequestParser()
 parser.add_argument('format', type=str, location='args', default='json')
 parser.add_argument('order', type=str, location='args', default='asc')
+
+cache = Cache(config={'CACHE_TYPE': 'flask_caching.backends.SimpleCache'})
 
 
 class Report(Resource):
@@ -48,13 +50,23 @@ class Report(Resource):
                   type: string
         """
         args = parser.parse_args()
+
+        cache_key = f"report_{args['order']}_{args['format']}"
+        cache_response = cache.get(cache_key)
+        if cache_response is not None:
+            return cache_response
+
         if args['order'] == 'desc':
-            PREPARED_DATA.reverse()
+            g.PREPARED_DATA.reverse()
 
         if args['format'] == 'xml':
-            return xml_response_api_report(PREPARED_DATA)
+            response = xml_response_api_report(g.PREPARED_DATA)
+        else:
+            response = json_response_api_report(g.PREPARED_DATA)
 
-        return json_response_api_report(PREPARED_DATA)
+        cache.set(cache_key, response, timeout=3600)
+
+        return response
 
 
 class Drivers(Resource):
@@ -88,12 +100,12 @@ class Drivers(Resource):
         """
         args = parser.parse_args()
         if args['order'] == 'desc':
-            PREPARED_DATA.reverse()
+            g.PREPARED_DATA.reverse()
 
         if args['format'] == 'xml':
-            return xml_response_api_drivers(PREPARED_DATA)
+            return xml_response_api_drivers(g.PREPARED_DATA)
 
-        return json_response_api_drivers(PREPARED_DATA)
+        return json_response_api_drivers(g.PREPARED_DATA)
 
 
 class UniqueDriver(Resource):
@@ -130,12 +142,20 @@ class UniqueDriver(Resource):
              descriptions: Driver not found, return an error page
         """
         args = parser.parse_args()
-        for driver in PREPARED_DATA:
+
+        cache_key = f"driver_{driver_id}_{args['format']}"
+        cache_response = cache.get(cache_key)
+        if cache_response is not None:
+            return cache_response
+
+        for driver in g.PREPARED_DATA:
             if driver.abr == driver_id:
 
                 if args['format'] == 'xml':
-                    return xml_response_api_driver(driver)
+                    response = xml_response_api_driver(driver)
+                else:
+                    response = json_response_api_driver(driver)
 
-                return json_response_api_driver(driver)
+                return response
 
         return make_response(render_template('404.html'), 404)

@@ -1,8 +1,5 @@
-from flask import Blueprint, render_template, request, make_response, Response
-
-from app.bl.report.prepare import prepare
-
-PREPARED_DATA = prepare()
+from flask import (Blueprint, render_template, request, make_response,
+                   Response, g)
 
 report_bp = Blueprint('report', __name__)
 error_bp = Blueprint('errors', __name__)
@@ -18,9 +15,9 @@ def report() -> str:
     order = request.args.get('order')
 
     if order == 'desc':
-        PREPARED_DATA.reverse()
+        g.PREPARED_DATA.reverse()
 
-    return render_template('report.html', prepared_data=PREPARED_DATA)
+    return render_template('report.html', prepared_data=g.PREPARED_DATA)
 
 
 @report_bp.route('/report/drivers/', methods=['GET'])
@@ -33,9 +30,9 @@ def drivers() -> str:
     order = request.args.get('order')
 
     if order == 'desc':
-        PREPARED_DATA.reverse()
+        g.PREPARED_DATA.reverse()
 
-    return render_template('drivers.html', prepared_data=PREPARED_DATA)
+    return render_template('drivers.html', prepared_data=g.PREPARED_DATA)
 
 
 @report_bp.route('/report/drivers/<string:driver_id>', methods=['GET'])
@@ -46,11 +43,11 @@ def unique_driver(driver_id) -> str | Response:
     :return: render HTML template or Response if driver not exist in report
     """
 
-    if not any(driver_id == driver.abr for driver in PREPARED_DATA):
+    if not any(driver_id == driver.abr for driver in g.PREPARED_DATA):
         return make_response(render_template('404.html'), 404)
 
     return render_template('unique_driver.html',
-                           prepared_data=PREPARED_DATA, driver_id=driver_id)
+                           prepared_data=g.PREPARED_DATA, driver_id=driver_id)
 
 
 @error_bp.app_errorhandler(404)
