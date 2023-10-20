@@ -40,7 +40,7 @@ class Report(Resource):
             enum: ['asc', 'desc']
             default: 'asc'
 
-        response:
+        responses:
           200:
             description: Returns a report in the specified format.
             schema:
@@ -89,7 +89,7 @@ class Drivers(Resource):
             enum: ['asc', 'desc']
             default: 'asc'
 
-        response:
+        responses:
           200:
             descriptions: Returns statistics about drivers
             schema:
@@ -139,7 +139,7 @@ class UniqueDriver(Resource):
              enum: ['json', 'xml']
              default: 'json'
 
-         response:
+         responses:
            200:
              descriptions: Return statistic of unique driver
              schema:
