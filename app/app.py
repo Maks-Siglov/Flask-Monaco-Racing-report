@@ -2,9 +2,9 @@ from flask import Flask
 from flasgger import Swagger
 from flask_restful import Api
 
-from app.api.report import Report, Drivers, UniqueDriver
-from app.site.routes import report_bp
-from app.site.routes import error_bp
+from app.api.report.routers import Report, Drivers, UniqueDriver
+from app.site.routers import report_bp
+from app.site.routers import error_bp
 
 TEMPLATE_FOLDER = 'site/templates'
 

@@ -1,19 +1,17 @@
 from flask import make_response, render_template, Response
 from flask_restful import Resource, reqparse
 
-from app.bl.report.prepare import prepare
-from app.api.utils.json_format import (
+from app.api import PREPARED_DATA
+from app.api.report.response.json import (
     json_response_api_report,
     json_response_api_drivers,
     json_response_api_driver
 )
-from app.api.utils.xml_format import (
+from app.api.report.response.xml import (
     xml_response_api_report,
     xml_response_api_drivers,
     xml_response_api_driver
 )
-
-PREPARED_DATA = prepare()
 
 parser = reqparse.RequestParser()
 parser.add_argument('format', type=str, location='args', default='json')
@@ -40,7 +38,7 @@ class Report(Resource):
             enum: ['asc', 'desc']
             default: 'asc'
 
-        responses:
+        response:
           200:
             description: Returns a report in the specified format.
             schema:
@@ -79,7 +77,7 @@ class Drivers(Resource):
             enum: ['asc', 'desc']
             default: 'asc'
 
-        responses:
+        response:
           200:
             descriptions: Returns statistics about drivers
             schema:
@@ -119,7 +117,7 @@ class UniqueDriver(Resource):
              enum: ['json', 'xml']
              default: 'json'
 
-         responses:
+         response:
            200:
              descriptions: Return statistic of unique driver
              schema:
