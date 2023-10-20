@@ -99,13 +99,23 @@ class Drivers(Resource):
                   type: string
         """
         args = parser.parse_args()
+
+        cache_key = f"drivers{args['order']}_{args['format']}"
+        cache_response = cache.get(cache_key)
+        if cache_response is not None:
+            return cache_response
+
         if args['order'] == 'desc':
             g.PREPARED_DATA.reverse()
 
         if args['format'] == 'xml':
-            return xml_response_api_drivers(g.PREPARED_DATA)
+            response = xml_response_api_drivers(g.PREPARED_DATA)
+        else:
+            response = json_response_api_drivers(g.PREPARED_DATA)
 
-        return json_response_api_drivers(g.PREPARED_DATA)
+        cache.set(cache_key, response, timeout=3600)
+
+        return response
 
 
 class UniqueDriver(Resource):
