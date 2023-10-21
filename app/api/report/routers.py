@@ -53,7 +53,7 @@ class Report(Resource):
 
         cache_key = f"report_{args['order']}_{args['format']}"
         cache_response = cache.get(cache_key)
-        if cache_response is not None:
+        if cache_response:
             return cache_response
 
         if args['order'] == 'desc':
@@ -102,7 +102,7 @@ class Drivers(Resource):
 
         cache_key = f"drivers{args['order']}_{args['format']}"
         cache_response = cache.get(cache_key)
-        if cache_response is not None:
+        if cache_response:
             return cache_response
 
         if args['order'] == 'desc':
@@ -155,7 +155,7 @@ class UniqueDriver(Resource):
 
         cache_key = f"driver_{driver_id}_{args['format']}"
         cache_response = cache.get(cache_key)
-        if cache_response is not None:
+        if cache_response:
             return cache_response
 
         for driver in g.PREPARED_DATA:
