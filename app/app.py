@@ -24,10 +24,12 @@ api.add_resource(Report, '/api/v1/report/')
 api.add_resource(Drivers, '/api/v1/report/drivers/')
 api.add_resource(UniqueDriver, '/api/v1/report/drivers/<string:driver_id>/')
 
+cache.set('cached_prepared_data', deepcopy(PREPARED_DATA))
+
 
 @app.before_request
 def before_request():
-    g.PREPARED_DATA = deepcopy(PREPARED_DATA)
+    g.PREPARED_DATA = cache.get('cached_prepared_data')
 
 
 if __name__ == '__main__':
