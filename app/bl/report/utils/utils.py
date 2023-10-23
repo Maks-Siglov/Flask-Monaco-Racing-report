@@ -1,9 +1,7 @@
 from datetime import timedelta
 
-from app.bl.report.models import LapTime
 
-
-def format_timedelta(timedelta_obj: timedelta) -> LapTime:
+def format_timedelta(timedelta_obj: timedelta) -> tuple[int, float]:
     """This function convert timedelta object into tuple with numbers for report
 
     :param timedelta_obj: timedelta result of subtraction of time of end lap and
@@ -12,4 +10,4 @@ def format_timedelta(timedelta_obj: timedelta) -> LapTime:
     """
     minutes, seconds = divmod(timedelta_obj.total_seconds(), 60)
 
-    return LapTime(int(minutes), round(seconds, 3))
+    return int(minutes), round(seconds, 3)

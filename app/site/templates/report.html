@@ -15,7 +15,7 @@
         </tr>
     </thead>
     <tbody>
-        {% for driver in prepared_data %}
+        {% for driver, result in prepared_data %}
         <tr>
             <td>{{ driver.abr }}</td>
             <td>{{ driver.name }}</td>

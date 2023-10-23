@@ -14,12 +14,12 @@
         </tr>
     </thead>
     <tbody>
-    {% for driver in prepared_data %}
+    {% for driver, result in prepared_data %}
         <tr>
-            <td>{{ driver.position }}.</td>
+            <td>{{ result.position }}.</td>
             <td>{{ driver.name }}</td>
             <td><a href="{{ url_for('report.unique_driver', driver_id=driver.abr) }}">{{ driver.abr }}</a></td>
-            <td>{{ driver.lap_time.minutes }}:{{ driver.lap_time.seconds }}</td>
+            <td>{{ result.minutes }}:{{ result.seconds }}</td>
         </tr>
     {% endfor %}
     </tbody>

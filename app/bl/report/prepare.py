@@ -1,56 +1,65 @@
 import re
 from datetime import datetime
+from peewee import fn, OperationalError
 
 from app.bl.report.utils.utils import format_timedelta
 from app.bl.report.utils.provider import read_log_files
-from app.bl.report.models import Driver
+from app.db.models import Driver, Result
+from app.db.config import db
 
 PATTERN = re.compile(r'(^[A-Z]+)(\S+)')
 DATE_FORMAT = '%Y-%m-%d_%H:%M:%S.%f'
 FOLDER_DATA = r'app/bl/data'
 
 
-def prepare(folder_path: str = FOLDER_DATA) -> list[Driver]:
-    """This function prepare data for web application and report
+def prepare() -> list[tuple[Result.owner, Result]]:
+    """This function checks whether tables exist in the database and whether
+     they contain data, if not, the tables are created and filled with data.
+     Also function create PREPARED_DATA.
 
-    :return: data which used for creating web application
+    :return:list with tuples which contains two object, first - driver with it
+    name, abr and team, second - result with  driver results in race (position,
+    time)
     """
+    try:
+        Driver.select().get()
+        Result.select().get()
+    except OperationalError:
+        _create_table()
+        _convert_data()
 
+    PREPARED_DATA = []
+    driver_results = Result.select().order_by(Result.position)
+
+    for result in driver_results:
+        PREPARED_DATA.append((result.owner, result))
+
+    return PREPARED_DATA
+
+
+def _convert_data(folder_path: str = FOLDER_DATA) -> None:
+    """This function convert data from log files and stores it to database
+
+     :param folder_path: path to the folder with log files
+     """
     start_log, end_log, abbreviations_data = read_log_files(folder_path)
-    driver_data = _prepare_data(start_log, end_log, abbreviations_data)
-    drivers = sorted(driver_data.values())
 
-    for position, item in enumerate(drivers, start=1):
-        item.position = position
-
-    return drivers
-
-
-def _prepare_data(start_log: list[str], end_log: list[str],
-                  abbreviations_data: list[str]) -> dict[str, Driver]:
-    """This function prepare data for prepare()
-
-    :param start_log: data about start time lap from log file
-    :param end_log: data about end time lap from log file
-    :param abbreviations_data: data from file contains abbreviation explanations
-    :return: data for building (printing) report
-    """
     prepare_start = _prepare_data_from_file(start_log)
     prepare_end = _prepare_data_from_file(end_log)
 
-    driver_data = {}
     for param in abbreviations_data:
         abr, name, team = param.strip().split('_')
-        lap_time = format_timedelta(prepare_end[abr] - prepare_start[abr])
-        driver_data[abr] = Driver(
-            abr=abr, name=name, team=team, lap_time=lap_time
-        )
+        minutes, seconds = format_timedelta(
+            prepare_end[abr] - prepare_start[abr])
 
-    return driver_data
+        driver = Driver.create(abr=abr, name=name, team=team)
+        Result.create(owner=driver, minutes=minutes, seconds=seconds)
+
+    _sort_drivers()
 
 
 def _prepare_data_from_file(file_data: list[str]) -> dict[str, datetime]:
-    """This function takes data for file and prepare it
+    """This function takes data from log file and prepare it
 
     :param file_data: file where we take data
     :return: dictionary, where abbreviation is key, start lap time - is value
@@ -64,3 +73,22 @@ def _prepare_data_from_file(file_data: list[str]) -> dict[str, datetime]:
         prepare_result[abr] = datetime.strptime(time, DATE_FORMAT)
 
     return prepare_result
+
+
+def _sort_drivers() -> None:
+    """This function sorts driver inside a database for it result in the race
+    and set position to each
+    """
+    sorted_results = list(Result.select().order_by(
+        Result.minutes < 0, fn.ABS(Result.minutes) * 60 + Result.seconds)
+    )
+
+    for position, result in enumerate(sorted_results, start=1):
+        result.position = position
+        result.save()
+
+
+def _create_table() -> None:
+    """This function creates tables in database"""
+    with db:
+        db.create_tables([Driver, Result])

@@ -158,13 +158,13 @@ class UniqueDriver(Resource):
         if cache_response:
             return cache_response
 
-        for driver in g.PREPARED_DATA:
+        for driver, result in g.PREPARED_DATA:
             if driver.abr == driver_id:
 
                 if args['format'] == 'xml':
-                    response = xml_response_api_driver(driver)
+                    response = xml_response_api_driver(driver, result)
                 else:
-                    response = json_response_api_driver(driver)
+                    response = json_response_api_driver(driver, result)
 
                 return response
 
