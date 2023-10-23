@@ -12,11 +12,13 @@ DATE_FORMAT = '%Y-%m-%d_%H:%M:%S.%f'
 FOLDER_DATA = r'app/bl/data'
 
 
-def prepare() -> list[tuple[Result.owner, Result]]:
+def prepare(folder_path: str = FOLDER_DATA
+            ) -> list[tuple[Result.owner, Result]]:
     """This function checks whether tables exist in the database and whether
      they contain data, if not, the tables are created and filled with data.
      Also function create PREPARED_DATA.
 
+    :param folder_path: path to the folder with log files
     :return:list with tuples which contains two object, first - driver with it
     name, abr and team, second - result with  driver results in race (position,
     time)
@@ -26,7 +28,7 @@ def prepare() -> list[tuple[Result.owner, Result]]:
         Result.select().get()
     except OperationalError:
         _create_table()
-        _convert_data()
+        _convert_data(folder_path)
 
     PREPARED_DATA = []
     driver_results = Result.select().order_by(Result.position)
@@ -37,7 +39,7 @@ def prepare() -> list[tuple[Result.owner, Result]]:
     return PREPARED_DATA
 
 
-def _convert_data(folder_path: str = FOLDER_DATA) -> None:
+def _convert_data(folder_path) -> None:
     """This function convert data from log files and stores it to database
 
      :param folder_path: path to the folder with log files
@@ -76,8 +78,8 @@ def _prepare_data_from_file(file_data: list[str]) -> dict[str, datetime]:
 
 
 def _sort_drivers() -> None:
-    """This function sorts driver inside a database for it result in the race
-    and set position to each
+    """This function sorts results by his owner inside a database for and set
+     position to each
     """
     sorted_results = list(Result.select().order_by(
         Result.minutes < 0, fn.ABS(Result.minutes) * 60 + Result.seconds)

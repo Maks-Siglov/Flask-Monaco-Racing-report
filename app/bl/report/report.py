@@ -1,5 +1,5 @@
 from app.bl.report.prepare import prepare
-from app.bl.report.models import Driver
+from app.db.models import Driver
 
 SEPARATOR_SYMBOL = '-'
 SEPARATOR_LENGTH = 62
@@ -41,13 +41,12 @@ def print_report(prepared_data: list[Driver], order: bool = True) -> None:
     if not order:
         prepared_data.reverse()
 
-    for driver in prepared_data:
-        string_position = f'{driver.position}.'
+    for driver, result in prepared_data:
+        string_position = f'{result.position}.'
         row = (f'{string_position:<{INDEX_INDENT}} {driver.name:<{NAME_INDENT}}'
-               f' {driver.team:<{TEAM_INDENT}} | '
-               f'{driver.lap_time.minutes}:{driver.lap_time.seconds}')
+        f' {driver.team:<{TEAM_INDENT}} | {result.minutes}:{result.seconds}')
 
-        if driver.position != index_underline:
+        if result.position != index_underline:
             print(row)
 
         else:
@@ -62,7 +61,7 @@ def report_unique_driver(prepared_data: list[Driver], driver_name: str) -> None:
     :param prepared_data: data for report
     """
 
-    for driver in prepared_data:
+    for driver, result in prepared_data:
         if driver_name == driver.name:
-            print(f'{driver.position}. {driver.name} | {driver.team} |'
-                  f' {driver.lap_time.minutes}:{driver.lap_time.seconds}')
+            print(f'{result.position}. {driver.name} | {driver.team} |'
+                  f' {result.minutes}:{result.seconds}')
