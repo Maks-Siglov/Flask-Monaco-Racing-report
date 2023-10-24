@@ -1,4 +1,5 @@
 from peewee import Model, CharField, IntegerField, ForeignKeyField, FloatField
+
 from app.db.config import db
 
 

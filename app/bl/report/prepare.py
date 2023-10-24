@@ -57,7 +57,7 @@ def _convert_and_store_data(folder_path) -> None:
         driver = Driver.create(abr=abr, name=name, team=team)
         Result.create(owner=driver, minutes=minutes, seconds=seconds)
 
-    _sort_drivers()
+    sort_results()
 
 
 def _prepare_data_from_file(file_data: list[str]) -> dict[str, datetime]:
@@ -77,7 +77,7 @@ def _prepare_data_from_file(file_data: list[str]) -> dict[str, datetime]:
     return prepare_result
 
 
-def _sort_drivers() -> None:
+def sort_results() -> None:
     """This function sorts results by his owner inside a database for and set
      position to each
     """
