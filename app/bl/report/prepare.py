@@ -5,7 +5,7 @@ from peewee import fn, OperationalError
 from app.bl.report.utils.utils import format_timedelta
 from app.bl.report.utils.provider import read_log_files
 from app.db.models import Driver, Result
-from app.db.config import db
+from app.db.utils import create_table
 
 PATTERN = re.compile(r'(^[A-Z]+)(\S+)')
 DATE_FORMAT = '%Y-%m-%d_%H:%M:%S.%f'
@@ -27,19 +27,19 @@ def prepare(folder_path: str = FOLDER_DATA
         Driver.select().get()
         Result.select().get()
     except OperationalError:
-        _create_table()
-        _convert_data(folder_path)
+        create_table()
+        _convert_and_store_data(folder_path)
 
-    PREPARED_DATA = []
+    prepared_data = []
     driver_results = Result.select().order_by(Result.position)
 
     for result in driver_results:
-        PREPARED_DATA.append((result.owner, result))
+        prepared_data.append((result.owner, result))
 
-    return PREPARED_DATA
+    return prepared_data
 
 
-def _convert_data(folder_path) -> None:
+def _convert_and_store_data(folder_path) -> None:
     """This function convert data from log files and stores it to database
 
      :param folder_path: path to the folder with log files
@@ -88,9 +88,3 @@ def _sort_drivers() -> None:
     for position, result in enumerate(sorted_results, start=1):
         result.position = position
         result.save()
-
-
-def _create_table() -> None:
-    """This function creates tables in database"""
-    with db:
-        db.create_tables([Driver, Result])
