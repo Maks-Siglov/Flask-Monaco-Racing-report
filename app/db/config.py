@@ -1,9 +1,8 @@
-import os
-from peewee import SqliteDatabase
-
-current_dir = os.path.dirname(os.path.abspath(__file__))
-DB_PATH = os.path.join(current_dir, 'report.db')
-
-db = SqliteDatabase(DB_PATH)
+from sqlalchemy import create_engine
 
 
+DB_PATH = 'app/db/report.db'
+
+DB_URL = f'sqlite:///{DB_PATH}'
+
+engine = create_engine(DB_URL)

@@ -1,5 +1,5 @@
 from app.bl.report.prepare import prepare
-from app.db.models import Driver
+from app.db.models.reports import Driver, Result
 
 SEPARATOR_SYMBOL = '-'
 SEPARATOR_LENGTH = 62
@@ -30,7 +30,8 @@ def build_from_parser(args_files: str, args_driver: str,
         report_unique_driver(prepared_data, args_driver)
 
 
-def print_report(prepared_data: list[Driver], order: bool = True) -> None:
+def print_report(prepared_data: list[tuple[Driver, Result]],
+                 order: bool = True) -> None:
     """This function build (print) report
 
     :param prepared_data: list with prepared data for report from build_report()
@@ -54,7 +55,8 @@ def print_report(prepared_data: list[Driver], order: bool = True) -> None:
             print(row)
 
 
-def report_unique_driver(prepared_data: list[Driver], driver_name: str) -> None:
+def report_unique_driver(prepared_data: list[tuple[Driver, Result]],
+                         driver_name: str) -> None:
     """This function build (print) report about unique driver
 
     :param driver_name: name of the driver

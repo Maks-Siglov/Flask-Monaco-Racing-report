@@ -1,10 +1,10 @@
 from flask import make_response, Response
 from xml.etree import ElementTree
 
-from app.db.models import Result
+from app.db.models.reports import Driver, Result
 
 
-def xml_response_api_report(prepared_data: list[tuple[Result.owner, Result]]
+def xml_response_api_report(prepared_data: list[tuple[Driver, Result]]
                             ) -> Response:
     """This function generate xml response for /api/v1/report/?format=xml
 
@@ -30,7 +30,7 @@ def xml_response_api_report(prepared_data: list[tuple[Result.owner, Result]]
     return response
 
 
-def xml_response_api_drivers(prepared_data: list[tuple[Result.owner, Result]]
+def xml_response_api_drivers(prepared_data: list[tuple[Driver, Result]]
                              ) -> Response:
     """This function generate xml response for
     /api/v1/report/drivers/?format=xml
@@ -48,7 +48,7 @@ def xml_response_api_drivers(prepared_data: list[tuple[Result.owner, Result]]
     return response
 
 
-def xml_response_api_driver(driver: Result.owner, result: Result) -> Response:
+def xml_response_api_driver(driver: Driver, result: Result) -> Response:
     """This function generate xml response for
      /api/v1/report/drivers/<string:driver_id>/?format=xml
      """
@@ -64,7 +64,7 @@ def xml_response_api_driver(driver: Result.owner, result: Result) -> Response:
 
 
 def _prepare_driver_xml(driver_element: ElementTree.Element,
-                        driver: Result.owner, result: Result) -> None:
+                        driver: Driver, result: Result) -> None:
     """This function prepare xml data about single driver, it takes
      driver_element (element of xml ElementTree), add subElements and values
     (text) to it for forming xml tree for xml_response_api_drivers/driver

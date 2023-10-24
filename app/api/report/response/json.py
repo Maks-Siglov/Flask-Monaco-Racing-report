@@ -1,9 +1,9 @@
 from flask import make_response, jsonify, Response
 
-from app.db.models import Result
+from app.db.models.reports import Driver, Result
 
 
-def json_response_api_report(prepared_data: list[tuple[Result.owner, Result]]
+def json_response_api_report(prepared_data: list[tuple[Driver, Result]]
                              ) -> Response:
     """This function generate json response for /api/v1/report
 
@@ -17,7 +17,7 @@ def json_response_api_report(prepared_data: list[tuple[Result.owner, Result]]
     return make_response(jsonify(data))
 
 
-def json_response_api_drivers(prepared_data: list[tuple[Result.owner, Result]]
+def json_response_api_drivers(prepared_data: list[tuple[Driver, Result]]
                               ) -> Response:
     """This function generate json response for /api/v1/report/drivers/"""
     data = {driver.name: _prepare_json_driver(driver, result)
@@ -26,7 +26,7 @@ def json_response_api_drivers(prepared_data: list[tuple[Result.owner, Result]]
     return make_response(jsonify(data))
 
 
-def json_response_api_driver(driver: Result.owner, result: Result) -> Response:
+def json_response_api_driver(driver: Driver, result: Result) -> Response:
     """This function generate json response for
      /api/v1/report/drivers/<string:driver_id>/
      """
@@ -35,7 +35,7 @@ def json_response_api_driver(driver: Result.owner, result: Result) -> Response:
     return make_response(jsonify(data))
 
 
-def _prepare_json_driver(driver: Result.owner, result: Result) -> dict:
+def _prepare_json_driver(driver: Driver, result: Result) -> dict:
     """This funtion prepare json data for single
      for json_response_api_drivers/driver
 
