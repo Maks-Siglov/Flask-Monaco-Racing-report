@@ -18,8 +18,8 @@ class Driver(Base):
 class Result(Base):
     __tablename__ = 'results'
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    owner_id: Mapped[int] = mapped_column(Integer, ForeignKey('drivers.id'))
+    owner_id: Mapped[int] = mapped_column(
+        Integer, ForeignKey('drivers.id'), primary_key=True)
     minutes: Mapped[int] = mapped_column(Integer)
     seconds: Mapped[float] = mapped_column(Float)
     position: Mapped[int] = mapped_column(Integer, nullable=True)
