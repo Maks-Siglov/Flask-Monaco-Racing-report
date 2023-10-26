@@ -1,12 +1,13 @@
 import re
 from datetime import datetime
-from sqlalchemy import func
+from sqlalchemy import func, select
 from sqlalchemy.exc import OperationalError
 
 from app.bl.report.utils.utils import format_timedelta
 from app.bl.report.utils.provider import read_log_files
 from app.db.models.reports import Driver, Result
-from app.db.utils import create_table, get_session
+from app.db.utils import create_table
+from app.db.session import get_session
 
 PATTERN = re.compile(r'(^[A-Z]+)(\S+)')
 DATE_FORMAT = '%Y-%m-%d_%H:%M:%S.%f'
@@ -32,15 +33,10 @@ def prepare(folder_path: str = FOLDER_DATA
             create_table()
             _convert_and_store_data(folder_path)
 
-        prepared_data = []
+        statement = select(Driver, Result).join(Result).order_by(
+            Result.position)
 
-        driver_results = session.query(Driver, Result).join(Result).order_by(
-            Result.position).all()
-
-        for driver, result in driver_results:
-            prepared_data.append((driver, result))
-
-    return prepared_data
+    return session.execute(statement).all()
 
 
 def _convert_and_store_data(folder_path) -> None:
@@ -54,6 +50,7 @@ def _convert_and_store_data(folder_path) -> None:
     prepare_end = _prepare_data_from_file(end_log)
 
     with get_session() as session:
+        driver_results = []
         for param in abbreviations_data:
             abr, name, team = param.strip().split('_')
             minutes, seconds = format_timedelta(
@@ -61,12 +58,11 @@ def _convert_and_store_data(folder_path) -> None:
 
             driver = Driver(abr=abr, name=name, team=team)
             result = Result(owner=driver, minutes=minutes, seconds=seconds)
-            session.add(driver)
-            session.add(result)
+            driver_results.append(result)
 
+        session.add_all(driver_results)
+        _sort_results(session)
         session.commit()
-
-    sort_results()
 
 
 def _prepare_data_from_file(file_data: list[str]) -> dict[str, datetime]:
@@ -86,15 +82,12 @@ def _prepare_data_from_file(file_data: list[str]) -> dict[str, datetime]:
     return prepare_result
 
 
-def sort_results() -> None:
+def _sort_results(session) -> None:
     """This function sorts results by his owner inside a database for and set
      position to each
     """
-    with get_session() as session:
-        sorted_results = session.query(Result).order_by(
-            Result.minutes < 0, func.ABS(Result.minutes) * 60 + Result.seconds)
+    statement = select(Result).order_by(
+        Result.minutes < 0, func.ABS(Result.minutes) * 60 + Result.seconds)
 
-        for position, result in enumerate(sorted_results, start=1):
-            result.position = position
-
-        session.commit()
+    for position, result in enumerate(session.execute(statement), start=1):
+        result.position = position

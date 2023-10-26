@@ -21,3 +21,4 @@ def test_db_session():
     yield session
     session.close()
     Base.metadata.drop_all(engine)
+    engine.dispose()

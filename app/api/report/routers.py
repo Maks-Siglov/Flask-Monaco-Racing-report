@@ -1,6 +1,7 @@
 from flask import make_response, render_template, Response, g
 from flask_restful import Resource, reqparse
 from flask_caching import Cache
+from sqlalchemy import select
 
 from app.api.report.response.json import (
     json_response_api_report,
@@ -12,6 +13,8 @@ from app.api.report.response.xml import (
     xml_response_api_drivers,
     xml_response_api_driver
 )
+from app.db.session import get_session
+from app.db.models.reports import Driver, Result
 
 parser = reqparse.RequestParser()
 parser.add_argument('format', type=str, location='args', default='json')
@@ -158,9 +161,12 @@ class UniqueDriver(Resource):
         if cache_response:
             return cache_response
 
-        for driver, result in g.PREPARED_DATA:
-            if driver.abr == driver_id:
-
+        with get_session() as session:
+            statement = select(Driver, Result).join(Result).where(
+                Driver.abr == driver_id)
+            data = session.execute(statement).one_or_none()
+            if data:
+                driver, result = data
                 if args['format'] == 'xml':
                     response = xml_response_api_driver(driver, result)
                 else:

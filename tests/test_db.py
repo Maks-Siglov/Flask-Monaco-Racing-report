@@ -1,5 +1,4 @@
 from app.db.models.reports import Driver, Result
-from app.bl.report.prepare import sort_results
 
 
 def test_insert_data(test_db_session):

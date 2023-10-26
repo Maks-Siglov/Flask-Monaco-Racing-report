@@ -1,7 +1,5 @@
-from sqlalchemy.orm import Session, sessionmaker
-
 from app.db.models.base import Base
-from app.db.config import engine
+from app.db.session import engine
 
 
 def create_table() -> None:
@@ -12,9 +10,3 @@ def create_table() -> None:
 def drop_table() -> None:
     """This function drops tables in database"""
     Base.metadata.drop_all(engine)
-
-
-def get_session() -> Session:
-    """This function create a session"""
-    session = sessionmaker(engine)
-    return session()
