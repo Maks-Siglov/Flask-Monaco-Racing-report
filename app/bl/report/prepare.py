@@ -1,4 +1,5 @@
 import re
+
 from datetime import datetime
 from sqlalchemy import func, select
 from sqlalchemy.exc import OperationalError
@@ -61,7 +62,7 @@ def _convert_and_store_data(folder_path) -> None:
             driver_results.append(result)
 
         session.add_all(driver_results)
-        _sort_results(session)
+        sort_results(session)
         session.commit()
 
 
@@ -82,12 +83,12 @@ def _prepare_data_from_file(file_data: list[str]) -> dict[str, datetime]:
     return prepare_result
 
 
-def _sort_results(session) -> None:
+def sort_results(session) -> None:
     """This function sorts results by his owner inside a database for and set
      position to each
     """
     statement = select(Result).order_by(
         Result.minutes < 0, func.ABS(Result.minutes) * 60 + Result.seconds)
 
-    for position, result in enumerate(session.execute(statement), start=1):
-        result.position = position
+    for pos, result in enumerate(session.execute(statement).scalars(), start=1):
+        result.position = pos

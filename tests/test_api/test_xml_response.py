@@ -1,4 +1,5 @@
 import pytest
+
 from xml.etree import ElementTree
 
 DRIVER_AMOUNT = 19
