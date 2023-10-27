@@ -162,15 +162,14 @@ class UniqueDriver(Resource):
             return cache_response
 
         with get_session() as session:
-            statement = select(Driver, Result).join(Result).where(
+            statement = select(Result).join(Result.driver).where(
                 Driver.abr == driver_id)
-            data = session.execute(statement).one_or_none()
-            if data:
-                driver, result = data
+            result = session.scalar(statement)
+            if result:
                 if args['format'] == 'xml':
-                    response = xml_response_api_driver(driver, result)
+                    response = xml_response_api_driver(result)
                 else:
-                    response = json_response_api_driver(driver, result)
+                    response = json_response_api_driver(result)
 
                 return response
 

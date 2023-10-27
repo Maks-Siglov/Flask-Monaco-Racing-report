@@ -6,8 +6,8 @@
 
 {% block body %}
 <h1>Driver Statistics</h1>
-{% for driver, result in prepared_data %}
-    {% if driver_id == driver.abr %}
+{% for result in prepared_data %}
+    {% if driver_id == result.driver.abr %}
     <table>
         <thead>
             <tr>
@@ -21,8 +21,8 @@
         <tbody>
         <tr>
             <td>{{ result.position }}.</td>
-            <td>{{ driver.name }}</td>
-            <td>{{ driver.team }}</td>
+            <td>{{ result.driver.name }}</td>
+            <td>{{ result.driver.team }}</td>
             <td>{{result.minutes}}:{{result.seconds}}</td>
         </tr>
         </tbody>

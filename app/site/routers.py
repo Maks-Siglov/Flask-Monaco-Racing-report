@@ -43,7 +43,7 @@ def unique_driver(driver_id) -> str | Response:
     :return: render HTML template or Response if driver not exist in report
     """
 
-    if not any(driver_id == driver.abr for driver, _ in g.PREPARED_DATA):
+    if not any(driver_id == result.driver.abr for result in g.PREPARED_DATA):
         return make_response(render_template('404.html'), 404)
 
     return render_template('unique_driver.html',
