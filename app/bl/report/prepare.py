@@ -56,7 +56,7 @@ def _convert_and_store_data(folder_path) -> None:
                 prepare_end[abr] - prepare_start[abr])
 
             driver = Driver(abr=abr, name=name, team=team)
-            result = Result(owner=driver, minutes=minutes, seconds=seconds)
+            result = Result(driver=driver, minutes=minutes, seconds=seconds)
             driver_results.append(result)
 
         session.add_all(driver_results)
