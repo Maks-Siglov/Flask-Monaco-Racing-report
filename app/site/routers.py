@@ -1,5 +1,10 @@
 from flask import (Blueprint, render_template, request, make_response,
                    Response, g)
+from sqlalchemy import select
+
+from app.db.models.reports import Result, Driver
+from app.db.session import get_session
+
 
 report_bp = Blueprint('report', __name__)
 error_bp = Blueprint('errors', __name__)
@@ -43,11 +48,14 @@ def unique_driver(driver_id) -> str | Response:
     :return: render HTML template or Response if driver not exist in report
     """
 
-    if not any(driver_id == result.driver.abr for result in g.PREPARED_DATA):
-        return make_response(render_template('404.html'), 404)
+    with get_session() as session:
+        statement = select(Result).join(Result.driver).where(
+            Driver.abr == driver_id)
+        result = session.scalar(statement)
+        if not result:
+            return make_response(render_template('404.html'), 404)
 
-    return render_template('unique_driver.html',
-                           prepared_data=g.PREPARED_DATA, driver_id=driver_id)
+    return render_template('unique_driver.html', result=result)
 
 
 @error_bp.app_errorhandler(404)
