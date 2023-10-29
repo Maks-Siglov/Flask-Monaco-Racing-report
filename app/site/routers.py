@@ -49,13 +49,15 @@ def unique_driver(driver_id) -> str | Response:
     """
 
     with get_session() as session:
-        statement = select(Result).join(Result.driver).where(
+        statement = select(Result, Driver).join(Driver).where(
             Driver.abr == driver_id)
-        result = session.scalar(statement)
-        if not result:
+        item = session.execute(statement).one_or_none()
+        if not item:
             return make_response(render_template('404.html'), 404)
 
-    return render_template('unique_driver.html', result=result)
+        result, driver = item
+
+    return render_template('unique_driver.html', result=result, driver=driver)
 
 
 @error_bp.app_errorhandler(404)

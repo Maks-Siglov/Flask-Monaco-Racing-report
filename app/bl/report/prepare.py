@@ -16,14 +16,14 @@ FOLDER_DATA = r'app/bl/data'
 
 
 def prepare(folder_path: str = FOLDER_DATA
-            ) -> list[Result]:
+            ) -> list[tuple[Result, Driver]]:
     """This function checks whether tables exist in the database and whether
      they contain data, if not, the tables are created and filled with data.
      Also function create PREPARED_DATA.
 
     :param folder_path: path to the folder with log files
-    :return: list with result object which also contain data about driver and
-     his results
+    :return: list with tuples, which contain two object, first - result which
+     keeps results of driver, second - driver with it name, abr and team
     """
     with get_session() as session:
         try:
@@ -33,9 +33,10 @@ def prepare(folder_path: str = FOLDER_DATA
             create_table()
             _convert_and_store_data(folder_path)
 
-        statement = select(Result).join(Result.driver).order_by(Result.position)
+        statement = select(Result, Driver).join(Driver).order_by(
+            Result.position)
 
-        return session.scalars(statement).all()
+        return session.execute(statement).all()
 
 
 def _convert_and_store_data(folder_path) -> None:

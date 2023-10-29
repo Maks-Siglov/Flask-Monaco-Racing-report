@@ -42,7 +42,7 @@ def print_report(prepared_data: list[tuple[Driver, Result]],
     if not order:
         prepared_data.reverse()
 
-    for driver, result in prepared_data:
+    for result, driver in prepared_data:
         string_position = f'{result.position}.'
         row = (f'{string_position:<{INDEX_INDENT}} {driver.name:<{NAME_INDENT}}'
         f' {driver.team:<{TEAM_INDENT}} | {result.minutes}:{result.seconds}')
@@ -63,7 +63,7 @@ def report_unique_driver(prepared_data: list[tuple[Driver, Result]],
     :param prepared_data: data for report
     """
 
-    for driver, result in prepared_data:
+    for result, driver in prepared_data:
         if driver_name == driver.name:
             print(f'{result.position}. {driver.name} | {driver.team} |'
                   f' {result.minutes}:{result.seconds}')

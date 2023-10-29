@@ -17,7 +17,8 @@ def test_sort_drivers(test_db_session):
 
         sort_results(session)
 
-        statement = select(Result).order_by(Result.position)
+        statement = select(Result, Driver).join(Driver).order_by(
+            Result.position)
         sorted_results = session.execute(statement).scalars().all()
 
         assert sorted_results[0] == best_result

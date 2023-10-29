@@ -12,6 +12,7 @@ class Driver(Base):
     name: Mapped[str] = mapped_column(String(30))
     team: Mapped[str] = mapped_column(String(50))
 
+    result = relationship('Result', back_populates='driver')
 
 class Result(Base):
     __tablename__ = 'results'
@@ -22,7 +23,7 @@ class Result(Base):
     seconds: Mapped[float] = mapped_column(Float)
     position: Mapped[int] = mapped_column(Integer, nullable=True)
 
-    driver: Mapped['Driver'] = relationship(lazy='joined')
+    driver = relationship('Driver', back_populates='result')
 
     @property
     def total_seconds(self):
