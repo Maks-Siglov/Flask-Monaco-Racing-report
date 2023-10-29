@@ -1,5 +1,8 @@
+from sqlalchemy import select
+
 from app.bl.report.prepare import prepare
 from app.db.models.reports import Driver, Result
+from app.db.session import get_session
 
 SEPARATOR_SYMBOL = '-'
 SEPARATOR_LENGTH = 62
@@ -27,14 +30,16 @@ def build_from_parser(args_files: str, args_driver: str,
         print_report(prepared_data, order)
 
     else:
-        report_unique_driver(prepared_data, args_driver)
+        report_unique_driver(args_driver)
 
 
-def print_report(prepared_data: list[tuple[Driver, Result]],
+def print_report(prepared_data: list[tuple[Result, Driver]],
                  order: bool = True) -> None:
     """This function build (print) report
 
-    :param prepared_data: list with prepared data for report from build_report()
+    :param prepared_data: list with tuples, which contain two object,first -
+     result which keeps results of driver, second - driver with it name, abr
+     and team
     :param order: shows in which order report should be
     if we use descending ordering
     """
@@ -55,15 +60,18 @@ def print_report(prepared_data: list[tuple[Driver, Result]],
             print(row)
 
 
-def report_unique_driver(prepared_data: list[tuple[Driver, Result]],
-                         driver_name: str) -> None:
+def report_unique_driver(driver_name: str) -> None:
     """This function build (print) report about unique driver
 
     :param driver_name: name of the driver
-    :param prepared_data: data for report
     """
-
-    for result, driver in prepared_data:
-        if driver_name == driver.name:
+    with get_session() as session:
+        statement = select(Result, Driver).join(Driver).where(
+            Driver.name == driver_name)
+        item = session.execute(statement).one_or_none()
+        if item:
+            result, driver = item
             print(f'{result.position}. {driver.name} | {driver.team} |'
                   f' {result.minutes}:{result.seconds}')
+        else:
+            print(f"Driver {driver_name} don't exist")

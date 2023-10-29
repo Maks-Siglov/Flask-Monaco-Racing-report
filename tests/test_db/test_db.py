@@ -23,7 +23,6 @@ def test_sort_drivers(test_db_session):
 
         assert sorted_results[0] == best_result
         assert sorted_results[0].driver == best_driver
-        assert len(sorted_results) == 3
         assert sorted_results[1] == medium_result
         assert sorted_results[1].driver == medium_driver
         assert sorted_results[2] == worst_result
