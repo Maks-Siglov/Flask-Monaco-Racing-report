@@ -14,9 +14,9 @@
         </tr>
     </thead>
     <tbody>
-    {% for result, driver in prepared_data %}
+    {% for result, driver in query_result %}
         <tr>
-            <td>{{ result.position }}.</td>
+            <td>{{ result.position}}.</td>
             <td>{{ driver.name }}</td>
             <td><a href="{{ url_for('report.unique_driver', driver_id=driver.abr) }}">{{ driver.abr }}</a></td>
             <td>{{ result.minutes }}:{{ result.seconds }}</td>

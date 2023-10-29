@@ -1,4 +1,4 @@
-from flask import make_response, render_template, Response, g
+from flask import make_response, render_template, Response
 from flask_restful import Resource, reqparse
 from flask_caching import Cache
 from sqlalchemy import select
@@ -59,13 +59,16 @@ class Report(Resource):
         if cache_response:
             return cache_response
 
-        if args['order'] == 'desc':
-            g.PREPARED_DATA.reverse()
+        with get_session() as session:
+            statement = select(Driver)
+            if args['order'] == 'desc':
+                statement = select(Driver).order_by(Driver.abr.desc())
 
-        if args['format'] == 'xml':
-            response = xml_response_api_report(g.PREPARED_DATA)
-        else:
-            response = json_response_api_report(g.PREPARED_DATA)
+            result = session.scalars(statement)
+            if args['format'] == 'xml':
+                response = xml_response_api_report(result)
+            else:
+                response = json_response_api_report(result)
 
         cache.set(cache_key, response, timeout=3600)
 
@@ -108,13 +111,19 @@ class Drivers(Resource):
         if cache_response:
             return cache_response
 
-        if args['order'] == 'desc':
-            g.PREPARED_DATA.reverse()
+        with get_session() as session:
+            statement = select(Result, Driver).join(Driver).order_by(
+                Result.position)
 
-        if args['format'] == 'xml':
-            response = xml_response_api_drivers(g.PREPARED_DATA)
-        else:
-            response = json_response_api_drivers(g.PREPARED_DATA)
+            if args['order'] == 'desc':
+                statement = select(Result, Driver).join(Driver).order_by(
+                    Result.position.desc())
+
+            result = session.execute(statement).all()
+            if args['format'] == 'xml':
+                response = xml_response_api_drivers(result)
+            else:
+                response = json_response_api_drivers(result)
 
         cache.set(cache_key, response, timeout=3600)
 

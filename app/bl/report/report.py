@@ -23,41 +23,45 @@ def build_from_parser(args_files: str, args_driver: str,
      if True order-descending, if False order-ascending
     """
 
-    prepared_data = prepare(args_files)
+    prepare(args_files)
 
     if args_driver is None:
         order = False if args_desc else True
-        print_report(prepared_data, order)
+        print_report(order)
 
     else:
         report_unique_driver(args_driver)
 
 
-def print_report(prepared_data: list[tuple[Result, Driver]],
-                 order: bool = True) -> None:
+def print_report(order: bool = True) -> None:
     """This function build (print) report
 
-    :param prepared_data: list with tuples, which contain two object,first -
-     result which keeps results of driver, second - driver with it name, abr
-     and team
     :param order: shows in which order report should be
     if we use descending ordering
     """
-    index_underline = INDEX_UNDERLINE + int(order)
-    if not order:
-        prepared_data.reverse()
+    with get_session() as session:
+        index_underline = INDEX_UNDERLINE + int(order)
+        statement = select(Result, Driver).join(Result).order_by(
+            Result.position)
 
-    for result, driver in prepared_data:
-        string_position = f'{result.position}.'
-        row = (f'{string_position:<{INDEX_INDENT}} {driver.name:<{NAME_INDENT}}'
-        f' {driver.team:<{TEAM_INDENT}} | {result.minutes}:{result.seconds}')
+        if not order:
+            statement = select(Result, Driver).join(Result).order_by(
+                Result.position.desc())
 
-        if result.position != index_underline:
-            print(row)
+        for result, driver in session.execute(statement).all():
+            string_position = f'{result.position}.'
 
-        else:
-            print(SEPARATOR_SYMBOL * SEPARATOR_LENGTH)
-            print(row)
+            row = (f'{string_position:<{INDEX_INDENT}}'
+                   f' {driver.name:<{NAME_INDENT}}'
+                   f' {driver.team:<{TEAM_INDENT}}'
+                   f' | {result.minutes}:{result.seconds}')
+
+            if result.position != index_underline:
+                print(row)
+
+            else:
+                print(SEPARATOR_SYMBOL * SEPARATOR_LENGTH)
+                print(row)
 
 
 def report_unique_driver(driver_name: str) -> None:

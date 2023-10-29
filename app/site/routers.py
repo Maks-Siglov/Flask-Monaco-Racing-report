@@ -1,5 +1,4 @@
-from flask import (Blueprint, render_template, request, make_response,
-                   Response, g)
+from flask import Blueprint, render_template, request, make_response, Response
 from sqlalchemy import select
 
 from app.db.models.reports import Result, Driver
@@ -17,12 +16,16 @@ def report() -> str:
 
     :return: render HTML template
     """
-    order = request.args.get('order')
+    with get_session() as session:
+        order = request.args.get('order')
+        statement = select(Driver)
 
-    if order == 'desc':
-        g.PREPARED_DATA.reverse()
+        if order == 'desc':
+            statement = select(Driver).order_by(Driver.abr.desc())
 
-    return render_template('report.html', prepared_data=g.PREPARED_DATA)
+        result = session.scalars(statement)
+        print(result)
+        return render_template('report.html', query_result=result)
 
 
 @report_bp.route('/report/drivers/', methods=['GET'])
@@ -32,12 +35,18 @@ def drivers() -> str:
 
     :return: render HTML template
     """
-    order = request.args.get('order')
+    with get_session() as session:
+        order = request.args.get('order')
+        statement = select(Result, Driver).join(Driver).order_by(
+            Result.position)
 
-    if order == 'desc':
-        g.PREPARED_DATA.reverse()
+        if order == 'desc':
+            statement = select(Result, Driver).join(Result).order_by(
+                Result.position.desc())
 
-    return render_template('drivers.html', prepared_data=g.PREPARED_DATA)
+        result = session.execute(statement).all()
+
+        return render_template('drivers.html', query_result=result)
 
 
 @report_bp.route('/report/drivers/<string:driver_id>', methods=['GET'])

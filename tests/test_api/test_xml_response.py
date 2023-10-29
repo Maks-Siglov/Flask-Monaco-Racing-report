@@ -7,14 +7,14 @@ API_XML_REPORT_ROUT = '/api/v1/report/?format=xml'
 API_XML_DRIVERS_ROUT = '/api/v1/report/drivers/?format=xml'
 
 xml_api_test_case = [
-    (0, 'SVF', 'Sebastian Vettel'),
-    (9, 'CSR', 'Carlos Sainz'),
-    (18, 'LHM', 'Lewis Hamilton')
+    (0, 'DRR'),
+    (9, 'PGS'),
+    (18, 'KMH')
 ]
 
 
-@pytest.mark.parametrize('position, abr, _', xml_api_test_case)
-def test_xml_api_report(client, position, abr, _):
+@pytest.mark.parametrize('position, abr', xml_api_test_case)
+def test_xml_api_report(client, position, abr):
     response = client.get(API_XML_REPORT_ROUT)
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'application/xml'
@@ -26,8 +26,15 @@ def test_xml_api_report(client, position, abr, _):
     assert abr_elements[position].text == abr
 
 
-@pytest.mark.parametrize('position, _, name', xml_api_test_case)
-def test_xml_api_drivers(client, position, _, name):
+xml_api_drivers_case = [
+    (0, 'Sebastian Vettel'),
+    (9, 'Carlos Sainz'),
+    (18, 'Lewis Hamilton')
+]
+
+
+@pytest.mark.parametrize('position, name', xml_api_drivers_case)
+def test_xml_api_drivers(client, position, name):
     response = client.get(API_XML_DRIVERS_ROUT)
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'application/xml'

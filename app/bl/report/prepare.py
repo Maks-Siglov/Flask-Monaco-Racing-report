@@ -15,8 +15,7 @@ DATE_FORMAT = '%Y-%m-%d_%H:%M:%S.%f'
 FOLDER_DATA = r'app/bl/data'
 
 
-def prepare(folder_path: str = FOLDER_DATA
-            ) -> list[tuple[Result, Driver]]:
+def prepare(folder_path: str = FOLDER_DATA) -> None:
     """This function checks whether tables exist in the database and whether
      they contain data, if not, the tables are created and filled with data.
      Also function create PREPARED_DATA.
@@ -32,11 +31,6 @@ def prepare(folder_path: str = FOLDER_DATA
         except OperationalError:
             create_table()
             _convert_and_store_data(folder_path)
-
-        statement = select(Result, Driver).join(Driver).order_by(
-            Result.position)
-
-        return session.execute(statement).all()
 
 
 def _convert_and_store_data(folder_path) -> None:

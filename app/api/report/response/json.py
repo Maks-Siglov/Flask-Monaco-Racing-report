@@ -1,27 +1,26 @@
+from sqlalchemy import ScalarResult
 from flask import make_response, jsonify, Response
 
 from app.db.models.reports import Result, Driver
 
 
-def json_response_api_report(prepared_data: list[tuple[Result, Driver]]
-                             ) -> Response:
+def json_response_api_report(query_result: ScalarResult) -> Response:
     """This function generate json response for /api/v1/report
 
-    :param prepared_data: list with tuples, which contain two object, first -
-    result which keeps results of driver, second - driver with it name, abr and
-    team
+    :param query_result: ScalarResult of query through which we can iterate and
+    take drivers
     """
     data = {driver.abr: {'name': driver.name, 'team': driver.team}
-            for _, driver in prepared_data}
+            for driver in query_result}
 
     return make_response(jsonify(data))
 
 
-def json_response_api_drivers(prepared_data: list[tuple[Result, Driver]]
+def json_response_api_drivers(query_result: list[tuple[Result, Driver]]
                               ) -> Response:
     """This function generate json response for /api/v1/report/drivers/"""
     data = {driver.name: _prepare_json_driver(result, driver)
-            for result, driver in prepared_data}
+            for result, driver in query_result}
 
     return make_response(jsonify(data))
 
