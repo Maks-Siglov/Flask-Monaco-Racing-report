@@ -6,8 +6,11 @@ from app.api.report.routers import Report, Drivers, UniqueDriver, cache
 from app.site.routers import report_bp
 from app.site.routers import error_bp
 from app.db.session import check_db
+from app.bl.report.prepare import prepare
 
 check_db()
+
+prepare()
 
 TEMPLATE_FOLDER = 'site/templates'
 
