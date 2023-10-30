@@ -1,6 +1,6 @@
 from sqlalchemy import select
 
-from app.bl.report.prepare import prepare
+from app.bl.report.prepare import prepare_db
 from app.db.models.reports import Driver, Result
 from app.db.session import get_session
 
@@ -23,7 +23,7 @@ def build_from_parser(args_files: str, args_driver: str,
      if True order-descending, if False order-ascending
     """
 
-    prepare(args_files)
+    prepare_db(args_files)
 
     if args_driver is None:
         order = False if args_desc else True

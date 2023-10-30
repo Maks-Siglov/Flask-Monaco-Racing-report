@@ -14,6 +14,7 @@ class Driver(Base):
 
     result = relationship('Result', back_populates='driver')
 
+
 class Result(Base):
     __tablename__ = 'results'
 

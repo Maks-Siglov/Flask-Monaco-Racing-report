@@ -15,14 +15,11 @@ DATE_FORMAT = '%Y-%m-%d_%H:%M:%S.%f'
 FOLDER_DATA = r'app/bl/data'
 
 
-def prepare(folder_path: str = FOLDER_DATA) -> None:
+def prepare_db(folder_path: str = FOLDER_DATA) -> None:
     """This function checks whether tables exist in the database and whether
      they contain data, if not, the tables are created and filled with data.
-     Also function create PREPARED_DATA.
 
     :param folder_path: path to the folder with log files
-    :return: list with tuples, which contain two object, first - result which
-     keeps results of driver, second - driver with it name, abr and team
     """
     with get_session() as session:
         try:
