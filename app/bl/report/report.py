@@ -5,7 +5,7 @@ from app.db.models.reports import Driver, Result
 from app.db.session import get_session
 
 SEPARATOR_SYMBOL = '-'
-SEPARATOR_LENGTH = 62
+SEPARATOR_LENGTH = 64
 INDEX_INDENT = 3
 NAME_INDENT = 18
 TEAM_INDENT = 26
@@ -52,9 +52,9 @@ def print_report(order: bool = True) -> None:
             string_position = f'{result.position}.'
 
             row = (f'{string_position:<{INDEX_INDENT}}'
-                   f' {driver.name:<{NAME_INDENT}}'
-                   f' {driver.team:<{TEAM_INDENT}}'
-                   f' | {result.minutes}:{result.seconds}')
+                   f' {driver.name:<{NAME_INDENT}} | '
+                   f' {driver.team:<{TEAM_INDENT}} | '
+                   f'{result.minutes}:{result.seconds}')
 
             if result.position != index_underline:
                 print(row)
