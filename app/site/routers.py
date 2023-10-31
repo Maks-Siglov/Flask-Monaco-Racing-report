@@ -1,7 +1,6 @@
 from flask import Blueprint, render_template, request, make_response, Response
-from sqlalchemy import select
 
-from app.db.models.reports import Result, Driver
+from app.crud import report_query, drivers_query, unique_driver_query
 from app.db.session import get_session
 
 
@@ -18,13 +17,9 @@ def report() -> str:
     """
     with get_session() as session:
         order = request.args.get('order')
-        statement = select(Driver)
 
-        if order == 'desc':
-            statement = select(Driver).order_by(Driver.abr.desc())
+        result = report_query(session, order)
 
-        result = session.scalars(statement)
-        print(result)
         return render_template('report.html', query_result=result)
 
 
@@ -37,14 +32,8 @@ def drivers() -> str:
     """
     with get_session() as session:
         order = request.args.get('order')
-        statement = select(Result, Driver).join(Driver).order_by(
-            Result.position)
 
-        if order == 'desc':
-            statement = select(Result, Driver).join(Result).order_by(
-                Result.position.desc())
-
-        result = session.execute(statement).all()
+        result = drivers_query(session, order)
 
         return render_template('drivers.html', query_result=result)
 
@@ -58,9 +47,8 @@ def unique_driver(driver_id) -> str | Response:
     """
 
     with get_session() as session:
-        statement = select(Result, Driver).join(Driver).where(
-            Driver.abr == driver_id)
-        item = session.execute(statement).one_or_none()
+        item = unique_driver_query(session, driver_id)
+
         if not item:
             return make_response(render_template('404.html'), 404)
 

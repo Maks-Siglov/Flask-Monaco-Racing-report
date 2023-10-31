@@ -3,6 +3,7 @@ from sqlalchemy import select
 from app.bl.report.prepare import prepare_db
 from app.db.models.reports import Driver, Result
 from app.db.session import get_session
+from app.crud import drivers_query
 
 SEPARATOR_SYMBOL = '-'
 SEPARATOR_LENGTH = 64
@@ -41,14 +42,10 @@ def print_report(order: bool = True) -> None:
     """
     with get_session() as session:
         index_underline = INDEX_UNDERLINE + int(order)
-        statement = select(Result, Driver).join(Result).order_by(
-            Result.position)
-
         if not order:
-            statement = select(Result, Driver).join(Result).order_by(
-                Result.position.desc())
+            order = 'desc'
 
-        for result, driver in session.execute(statement).all():
+        for result, driver in drivers_query(session, order):
             string_position = f'{result.position}.'
 
             row = (f'{string_position:<{INDEX_INDENT}}'

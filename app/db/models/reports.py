@@ -18,8 +18,9 @@ class Driver(Base):
 class Result(Base):
     __tablename__ = 'results'
 
+    id: Mapped[int] = mapped_column(primary_key=True)
     driver_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey('drivers.id'), primary_key=True)
+        Integer, ForeignKey('drivers.id'))
     minutes: Mapped[int] = mapped_column(Integer)
     seconds: Mapped[float] = mapped_column(Float)
     position: Mapped[int] = mapped_column(Integer, nullable=True)
@@ -27,5 +28,5 @@ class Result(Base):
     driver = relationship('Driver', back_populates='result')
 
     @property
-    def total_seconds(self):
+    def total_seconds(self) -> float:
         return round(self.minutes * 60 + self.seconds, 3)

@@ -14,6 +14,7 @@ from app.api.report.response.xml import (
     xml_response_api_driver
 )
 from app.db.session import get_session
+from app.crud import report_query, drivers_query, unique_driver_query
 from app.db.models.reports import Driver, Result
 
 parser = reqparse.RequestParser()
@@ -60,11 +61,9 @@ class Report(Resource):
             return cache_response
 
         with get_session() as session:
-            statement = select(Driver)
-            if args['order'] == 'desc':
-                statement = select(Driver).order_by(Driver.abr.desc())
+            order = args['order']
+            result = report_query(session, order)
 
-            result = session.scalars(statement)
             if args['format'] == 'xml':
                 response = xml_response_api_report(result)
             else:
@@ -112,14 +111,9 @@ class Drivers(Resource):
             return cache_response
 
         with get_session() as session:
-            statement = select(Result, Driver).join(Driver).order_by(
-                Result.position)
+            order = args['order']
+            result = drivers_query(session, order)
 
-            if args['order'] == 'desc':
-                statement = select(Result, Driver).join(Driver).order_by(
-                    Result.position.desc())
-
-            result = session.execute(statement).all()
             if args['format'] == 'xml':
                 response = xml_response_api_drivers(result)
             else:
@@ -171,9 +165,8 @@ class UniqueDriver(Resource):
             return cache_response
 
         with get_session() as session:
-            statement = select(Result, Driver).join(Driver).where(
-                Driver.abr == driver_id)
-            item = session.execute(statement).one_or_none()
+            item = unique_driver_query(session, driver_id)
+
             if item:
                 result, driver = item
                 if args['format'] == 'xml':
