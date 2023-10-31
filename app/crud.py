@@ -37,6 +37,7 @@ def drivers_query(session, order) -> list[tuple[Result, Driver]]:
 def unique_driver_query(session, driver_id) -> None | tuple[Result, Driver]:
     """This function creates query for unique driver router
 
+    :param session: db session which we use in route to complete query
     :param driver_id: driver abbreviation
     :return: tuple which contains two object, first - Result with
     results data, second - Driver or None if driver_id (abr) don't exist in db

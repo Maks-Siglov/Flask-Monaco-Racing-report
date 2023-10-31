@@ -1,7 +1,6 @@
 from flask import make_response, render_template, Response
 from flask_restful import Resource, reqparse
 from flask_caching import Cache
-from sqlalchemy import select
 
 from app.api.report.response.json import (
     json_response_api_report,
@@ -15,7 +14,6 @@ from app.api.report.response.xml import (
 )
 from app.db.session import get_session
 from app.crud import report_query, drivers_query, unique_driver_query
-from app.db.models.reports import Driver, Result
 
 parser = reqparse.RequestParser()
 parser.add_argument('format', type=str, location='args', default='json')

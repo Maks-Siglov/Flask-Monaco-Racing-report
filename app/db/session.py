@@ -36,14 +36,14 @@ def get_session(db_engine: Engine = engine) -> Session:
     return session()
 
 
-def check_db() -> None:
+def check_db(db_engine: Engine = engine) -> None:
     """This function open and close check connection to db and make test session
     query before app running to display log information to ensure that db work
     as expected"""
     try:
-        connect = engine.connect()
+        connect = db_engine.connect()
         log.error(f'Database ready: {not connect.closed}')
-        with get_session() as session:
+        with get_session(db_engine) as session:
             session.scalars(text('SELECT 1'))
         connect.close()
         log.error(f'Check connection close: {connect.closed}')
