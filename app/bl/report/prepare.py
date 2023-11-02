@@ -4,7 +4,6 @@ from datetime import datetime
 from sqlalchemy import func, select
 from sqlalchemy.exc import OperationalError
 
-from app.bl.report.utils.utils import format_timedelta
 from app.bl.report.utils.provider import read_log_files
 from app.db.models.reports import Driver, Result
 from app.db.utils import create_table
@@ -44,11 +43,10 @@ def _convert_and_store_data(folder_path) -> None:
         driver_results = []
         for param in abbreviations_data:
             abr, name, team = param.strip().split('_')
-            minutes, seconds = format_timedelta(
-                prepare_end[abr] - prepare_start[abr])
+            start, end = prepare_start[abr], prepare_end[abr]
 
             driver = Driver(abr=abr, name=name, team=team)
-            result = Result(driver=driver, minutes=minutes, seconds=seconds)
+            result = Result(driver=driver, start=start, end=end)
             driver_results.append(result)
 
         session.add_all(driver_results)
@@ -77,8 +75,8 @@ def sort_results(session) -> None:
     """This function sorts results by his owner inside a database for and set
      position to each
     """
-    statement = select(Result).order_by(
-        Result.minutes < 0, func.ABS(Result.minutes) * 60 + Result.seconds)
+    statement = select(Result).order_by(Result.time_difference < 0,
+                                        func.ABS(Result.time_difference))
 
     for pos, result in enumerate(session.execute(statement).scalars(), start=1):
         result.position = pos

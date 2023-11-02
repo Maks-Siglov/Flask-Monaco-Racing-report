@@ -13,7 +13,7 @@ from app.api.report.response.xml import (
     xml_response_api_driver
 )
 from app.db.session import get_session
-from app.crud import report_query, drivers_query, unique_driver_query
+from app.crud.report import report_query, drivers_query, unique_driver_query
 
 parser = reqparse.RequestParser()
 parser.add_argument('format', type=str, location='args', default='json')

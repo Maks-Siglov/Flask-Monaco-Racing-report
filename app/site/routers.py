@@ -1,6 +1,6 @@
 from flask import Blueprint, render_template, request, make_response, Response
 
-from app.crud import report_query, drivers_query, unique_driver_query
+from app.crud.report import report_query, drivers_query, unique_driver_query
 from app.db.session import get_session
 
 

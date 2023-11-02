@@ -1,5 +1,7 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, Integer, ForeignKey, Float
+from sqlalchemy import String, Integer, ForeignKey, func, DateTime
+from sqlalchemy.ext.hybrid import hybrid_property
+from datetime import datetime
 
 from app.db.models.base import Base
 
@@ -21,12 +23,21 @@ class Result(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
     driver_id: Mapped[int] = mapped_column(
         Integer, ForeignKey('drivers.id'))
-    minutes: Mapped[int] = mapped_column(Integer)
-    seconds: Mapped[float] = mapped_column(Float)
+    start: Mapped[datetime] = mapped_column(DateTime)
+    end: Mapped[datetime] = mapped_column(DateTime)
     position: Mapped[int] = mapped_column(Integer, nullable=True)
 
     driver = relationship('Driver', back_populates='result')
 
+    @hybrid_property
+    def total_seconds(self) -> int:
+        return (self.end - self.start).total_seconds()
+
+    @total_seconds.expression
+    def time_difference(cls) -> int:
+        return (func.julianday(cls.end) - func.julianday(cls.start)) * 86400
+
     @property
-    def total_seconds(self) -> float:
-        return round(self.minutes * 60 + self.seconds, 3)
+    def result(self):
+        minutes, seconds = divmod(self.total_seconds, 60)
+        return int(minutes), round(seconds, 3)

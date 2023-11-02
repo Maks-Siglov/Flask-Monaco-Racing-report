@@ -3,7 +3,7 @@ from sqlalchemy import select
 from app.bl.report.prepare import prepare_db
 from app.db.models.reports import Driver, Result
 from app.db.session import get_session
-from app.crud import drivers_query
+from app.crud.report import drivers_query
 
 SEPARATOR_SYMBOL = '-'
 SEPARATOR_LENGTH = 64
