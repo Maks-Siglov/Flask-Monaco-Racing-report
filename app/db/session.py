@@ -7,6 +7,8 @@ from sqlalchemy.orm import sessionmaker, Session, SessionTransaction
 
 from app.config import BASE_URL, DB_NAME, ENGINE_OPTIONS
 
+log = logging.getLogger(__name__)
+
 
 @dataclasses.dataclass
 class SessionPool:
@@ -52,6 +54,7 @@ def _check_connection(engine: Engine) -> None:
     try:
         with engine.connect() as conn:
             conn.execute(select(1))
+            log.error('Connection success')
     except Exception as e:
         raise SessionExcept(e)
 
@@ -75,8 +78,9 @@ def pop_session() -> None:
      current SessionPool"""
     try:
         s.user_db.commit()
-    except Exception:
+    except Exception as e:
         s.user_db.rollback()
+        log.error(f'During session error occurred.Rollback because of {str(e)}')
     finally:
         s.user_db.close()
 

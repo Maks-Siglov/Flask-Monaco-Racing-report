@@ -16,13 +16,19 @@ def create_test_db():
 
 
 @pytest.fixture
+def fresh_db(create_test_db):
+    drop_table(create_test_db)
+    create_test_db.dispose()
+
+    engine = create_database_or_engine(BASE_URL, DB_NAME, {})
+    create_table(engine)
+    yield engine
+    drop_table(engine)
+    engine.dispose()
+
+
+@pytest.fixture
 def test_session():
     set_session()
     yield s
     close_dbs()
-
-
-@pytest.fixture()
-def clean_up_database(create_test_db):
-    drop_table(create_test_db)
-    create_table(create_test_db)
