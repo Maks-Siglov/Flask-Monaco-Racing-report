@@ -20,3 +20,9 @@ def test_session():
     set_session()
     yield s
     close_dbs()
+
+
+@pytest.fixture()
+def clean_up_database(create_test_db):
+    drop_table(create_test_db)
+    create_table(create_test_db)

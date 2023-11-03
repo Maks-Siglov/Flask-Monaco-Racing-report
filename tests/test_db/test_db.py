@@ -14,10 +14,7 @@ START_WORST_DRIVER = datetime.strptime('2018-05-24_12:14:12.22', DATE_FORMAT)
 END_WORST_DRIVER = datetime.strptime('2018-05-24_11:14:12.226', DATE_FORMAT)
 
 
-def test_sort_drivers(create_test_db, test_session):
-
-    drop_table(create_test_db)
-    create_table(create_test_db)
+def test_sort_drivers(test_session, clean_up_database):
 
     worst_driver = Driver(abr='LHM', name='Lewis Hamilton', team='MERCEDES')
     best_driver = Driver(abr='NHR', name='Nico Hulkenberg', team='RENAULT')
@@ -35,7 +32,6 @@ def test_sort_drivers(create_test_db, test_session):
             Result.position)
     sorted_results = test_session.user_db.execute(statement).scalars().all()
 
-    assert len(sorted_results) == 2
     assert sorted_results[0] == best_result
     assert sorted_results[0].driver == best_driver
     assert sorted_results[1] == worst_result
