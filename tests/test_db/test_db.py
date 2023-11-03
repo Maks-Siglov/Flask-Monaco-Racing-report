@@ -3,7 +3,6 @@ from datetime import datetime
 
 from app.db.models.reports import Driver, Result
 from app.bl.report.prepare import sort_results
-from app.db.utils import drop_table, create_table
 
 DATE_FORMAT = '%Y-%m-%d_%H:%M:%S.%f'
 
