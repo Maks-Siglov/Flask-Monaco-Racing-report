@@ -1,7 +1,7 @@
 from sqlalchemy import Engine
 
 from app.db.models.base import Base
-from app.db.session import engine
+from app.db.engine import engine
 
 
 def create_table(db_engine: Engine = engine) -> None:

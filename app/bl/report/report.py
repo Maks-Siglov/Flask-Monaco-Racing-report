@@ -2,7 +2,7 @@ from sqlalchemy import select
 
 from app.bl.report.prepare import prepare_db
 from app.db.models.reports import Driver, Result
-from app.db.session import get_session
+from app.db.engine import get_session
 from app.crud.report import drivers_query
 
 SEPARATOR_SYMBOL = '-'
@@ -51,7 +51,7 @@ def print_report(order: bool = True) -> None:
             row = (f'{string_position:<{INDEX_INDENT}}'
                    f' {driver.name:<{NAME_INDENT}} | '
                    f' {driver.team:<{TEAM_INDENT}} | '
-                   f'{result.minutes}:{result.seconds}')
+                   f'{result.result[0]}:{result.result[1]}')
 
             if result.position != index_underline:
                 print(row)
@@ -73,6 +73,6 @@ def report_unique_driver(driver_name: str) -> None:
         if item:
             result, driver = item
             print(f'{result.position}. {driver.name} | {driver.team} |'
-                  f' {result.minutes}:{result.seconds}')
+                  f' {result.result[0]}:{result.result[1]}')
         else:
             print(f"Driver {driver_name} don't exist")

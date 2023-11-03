@@ -7,7 +7,7 @@ from sqlalchemy.exc import OperationalError
 from app.bl.report.utils.provider import read_log_files
 from app.db.models.reports import Driver, Result
 from app.db.utils import create_table
-from app.db.session import get_session
+from app.db.session import s
 
 PATTERN = re.compile(r'(^[A-Z]+)(\S+)')
 DATE_FORMAT = '%Y-%m-%d_%H:%M:%S.%f'
@@ -20,13 +20,12 @@ def prepare_db(folder_path: str = FOLDER_DATA) -> None:
 
     :param folder_path: path to the folder with log files
     """
-    with get_session() as session:
-        try:
-            session.execute(select(Driver)).all()
-            session.execute(select(Result)).all()
-        except OperationalError:
-            create_table()
-            _convert_and_store_data(folder_path)
+    try:
+        s.user_db.execute(select(Driver)).all()
+        s.user_db.execute(select(Result)).all()
+    except OperationalError:
+        create_table()
+        _convert_and_store_data(folder_path)
 
 
 def _convert_and_store_data(folder_path) -> None:
@@ -39,19 +38,18 @@ def _convert_and_store_data(folder_path) -> None:
     prepare_start = _prepare_data_from_file(start_log)
     prepare_end = _prepare_data_from_file(end_log)
 
-    with get_session() as session:
-        driver_results = []
-        for param in abbreviations_data:
-            abr, name, team = param.strip().split('_')
-            start, end = prepare_start[abr], prepare_end[abr]
+    driver_results = []
+    for param in abbreviations_data:
+        abr, name, team = param.strip().split('_')
+        start, end = prepare_start[abr], prepare_end[abr]
 
-            driver = Driver(abr=abr, name=name, team=team)
-            result = Result(driver=driver, start=start, end=end)
-            driver_results.append(result)
+        driver = Driver(abr=abr, name=name, team=team)
+        result = Result(driver=driver, start=start, end=end)
+        driver_results.append(result)
 
-        session.add_all(driver_results)
-        sort_results(session)
-        session.commit()
+    s.user_db.add_all(driver_results)
+    sort_results(s.user_db)
+    s.user_db.commit()
 
 
 def _prepare_data_from_file(file_data: list[str]) -> dict[str, datetime]:
@@ -71,12 +69,12 @@ def _prepare_data_from_file(file_data: list[str]) -> dict[str, datetime]:
     return prepare_result
 
 
-def sort_results(session) -> None:
+def sort_results(s) -> None:
     """This function sorts results by his owner inside a database for and set
      position to each
     """
     statement = select(Result).order_by(Result.time_difference < 0,
                                         func.ABS(Result.time_difference))
 
-    for pos, result in enumerate(session.execute(statement).scalars(), start=1):
+    for pos, result in enumerate(s.execute(statement).scalars(), start=1):
         result.position = pos

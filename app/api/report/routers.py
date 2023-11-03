@@ -12,8 +12,8 @@ from app.api.report.response.xml import (
     xml_response_api_drivers,
     xml_response_api_driver
 )
-from app.db.session import get_session
 from app.crud.report import report_query, drivers_query, unique_driver_query
+from app.db.session import s
 
 parser = reqparse.RequestParser()
 parser.add_argument('format', type=str, location='args', default='json')
@@ -58,14 +58,13 @@ class Report(Resource):
         if cache_response:
             return cache_response
 
-        with get_session() as session:
-            order = args['order']
-            result = report_query(session, order)
+        order = args['order']
+        result = report_query(s, order)
 
-            if args['format'] == 'xml':
-                response = xml_response_api_report(result)
-            else:
-                response = json_response_api_report(result)
+        if args['format'] == 'xml':
+            response = xml_response_api_report(result)
+        else:
+            response = json_response_api_report(result)
 
         cache.set(cache_key, response, timeout=3600)
 
@@ -108,14 +107,13 @@ class Drivers(Resource):
         if cache_response:
             return cache_response
 
-        with get_session() as session:
-            order = args['order']
-            result = drivers_query(session, order)
+        order = args['order']
+        result = drivers_query(s, order)
 
-            if args['format'] == 'xml':
-                response = xml_response_api_drivers(result)
-            else:
-                response = json_response_api_drivers(result)
+        if args['format'] == 'xml':
+            response = xml_response_api_drivers(result)
+        else:
+            response = json_response_api_drivers(result)
 
         cache.set(cache_key, response, timeout=3600)
 
@@ -162,16 +160,15 @@ class UniqueDriver(Resource):
         if cache_response:
             return cache_response
 
-        with get_session() as session:
-            item = unique_driver_query(session, driver_id)
+        item = unique_driver_query(s, driver_id)
 
-            if item:
-                result, driver = item
-                if args['format'] == 'xml':
-                    response = xml_response_api_driver(result, driver)
-                else:
-                    response = json_response_api_driver(result, driver)
+        if item:
+            result, driver = item
+            if args['format'] == 'xml':
+                response = xml_response_api_driver(result, driver)
+            else:
+                response = json_response_api_driver(result, driver)
 
-                return response
+            return response
 
         return make_response(render_template('404.html'), 404)
