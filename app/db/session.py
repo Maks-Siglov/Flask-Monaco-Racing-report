@@ -70,7 +70,7 @@ def _check_connection(engine: Engine) -> None:
 
 def _create_sessionmaker(engine: Engine) -> sessionmaker:
     """This function create sessionmaker for get_pool_sync"""
-    return sessionmaker(bind=engine, expire_on_commit=False, future=True)
+    return sessionmaker(bind=engine, expire_on_commit=False)
 
 
 def pop_session() -> None:

@@ -15,7 +15,7 @@ DB_NAME = os.getenv('DB_NAME')
 ENGINE = os.getenv('ENGINE')
 
 HOST = os.getenv('HOST')
-PORT = int(os.getenv('PORT'))
+PORT = os.getenv('PORT')
 
 DEBUG = os.getenv('DEBUG')
 
