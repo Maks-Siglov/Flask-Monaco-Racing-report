@@ -14,6 +14,7 @@ def create_test_db():
     drop_table(engine)
     engine.dispose()
 
+
 @pytest.fixture
 def fresh_db(create_test_db):
     drop_table(create_test_db)

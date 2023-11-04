@@ -19,7 +19,6 @@ def report() -> str:
 
     result = report_query(s, order)
 
-
     return render_template('report.html', query_result=result)
 
 

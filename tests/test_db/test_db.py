@@ -30,6 +30,7 @@ def test_sort_drivers(test_session, fresh_db):
     statement = select(Result, Driver).join(Driver).order_by(
             Result.position)
     sorted_results = test_session.user_db.execute(statement).scalars().all()
+
     assert len(sorted_results) == 2
     assert sorted_results[0] == best_result
     assert sorted_results[0].driver == best_driver

@@ -15,7 +15,7 @@ def create_database_or_engine(db_url: str, db_name: str, options: dict
     try:
         _create_database(db_url, db_name)
     except OperationalError:
-        log.error(f'Creating database {db_name}')
+        log.warning(f'Creating database {db_name}')
 
     return create_engine(f'{db_url}/{db_name}', **options)
 

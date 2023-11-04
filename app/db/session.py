@@ -1,6 +1,6 @@
-import dataclasses
 import logging
 
+from dataclasses import dataclass
 from contextvars import ContextVar
 from sqlalchemy import create_engine, Engine, select
 from sqlalchemy.orm import sessionmaker, Session, SessionTransaction
@@ -10,7 +10,7 @@ from app.config import BASE_URL, DB_NAME, ENGINE_OPTIONS
 log = logging.getLogger(__name__)
 
 
-@dataclasses.dataclass
+@dataclass
 class SessionPool:
     engine: Engine
     maker: sessionmaker
@@ -54,7 +54,7 @@ def _check_connection(engine: Engine) -> None:
     try:
         with engine.connect() as conn:
             conn.execute(select(1))
-            log.error('Connection success')
+            log.warning('Connection success')
     except Exception as e:
         raise SessionExcept(e)
 
