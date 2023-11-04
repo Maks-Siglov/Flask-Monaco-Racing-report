@@ -19,7 +19,6 @@ def create_app() -> Flask:
     swagger = Swagger(app)
     cache.init_app(app)
 
-    set_session()
     prepare_db()
 
     app.before_request(set_session)
@@ -27,7 +26,7 @@ def create_app() -> Flask:
     @app.teardown_request
     def handle_session(args) -> Any:
         pop_session()
-        return args
+        return
 
     @app.teardown_appcontext
     def close_db(args) -> Any:

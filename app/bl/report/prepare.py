@@ -7,7 +7,7 @@ from sqlalchemy.exc import OperationalError
 from app.bl.report.utils.provider import read_log_files
 from app.db.models.reports import Driver, Result
 from app.db.utils import create_table
-from app.db.session import s
+from app.db.session import set_session, s
 
 PATTERN = re.compile(r'(^[A-Z]+)(\S+)')
 DATE_FORMAT = '%Y-%m-%d_%H:%M:%S.%f'
@@ -20,6 +20,7 @@ def prepare_db(folder_path: str = FOLDER_DATA) -> None:
 
     :param folder_path: path to the folder with log files
     """
+    set_session()
     try:
         s.user_db.execute(select(Driver)).all()
         s.user_db.execute(select(Result)).all()

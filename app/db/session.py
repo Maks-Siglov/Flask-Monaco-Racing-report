@@ -28,6 +28,14 @@ class SessionExcept(Exception):
     pass
 
 
+def set_session() -> None:
+    """This function establish current SessionPool by get_pool_sync and set
+    to the s.user_db sessionmaker of the current SessionPool"""
+    current_pool = get_pool_sync(f'{BASE_URL}/{DB_NAME}', ENGINE_OPTIONS)
+    s.user_db = current_pool.maker()
+    s.user_db.connection(execution_options={'isolation_level': 'AUTOCOMMIT'})
+
+
 def get_pool_sync(db_url: str, options: dict) -> SessionPool:
     """This function creates SessionPool dataclas which contains Engine and
     sessionmaker check connect, and set it  as a value to dict with db_url key
@@ -56,20 +64,13 @@ def _check_connection(engine: Engine) -> None:
             conn.execute(select(1))
             log.warning('Connection success')
     except Exception as e:
+        log.error('During check connection error occurred')
         raise SessionExcept(e)
 
 
 def _create_sessionmaker(engine: Engine) -> sessionmaker:
     """This function create sessionmaker for get_pool_sync"""
     return sessionmaker(bind=engine, expire_on_commit=False, future=True)
-
-
-def set_session() -> None:
-    """This function establish current SessionPool by get_pool_sync and set
-    to the s.user_db sessionmaker of the current SessionPool"""
-    current_pool = get_pool_sync(f'{BASE_URL}/{DB_NAME}', ENGINE_OPTIONS)
-    s.user_db = current_pool.maker()
-    s.user_db.connection(execution_options={'isolation_level': 'AUTOCOMMIT'})
 
 
 def pop_session() -> None:
@@ -80,7 +81,7 @@ def pop_session() -> None:
         s.user_db.commit()
     except Exception as e:
         s.user_db.rollback()
-        log.error(f'During session error occurred.Rollback because of {str(e)}')
+        log.error(f'During session error occurred {str(e)}.Session ROLLBACK ')
     finally:
         s.user_db.close()
 
