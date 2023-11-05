@@ -40,6 +40,7 @@ def cli() -> None:
 def report(files: str, driver: str, desc: bool) -> None:
     if not os.path.exists(files):
         raise ValueError(f"Path {files} from --file argument don't exist")
+    set_session()
     build_from_parser(files, driver, desc)
 
 

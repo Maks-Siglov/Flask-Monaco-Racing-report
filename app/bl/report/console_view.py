@@ -31,8 +31,6 @@ def build_from_parser(
      if True order-descending, if False order-ascending
     """
 
-    convert_and_store_data(args_files)
-
     if args_driver is None:
         order = False if args_desc else True
         print_report(order)
@@ -52,7 +50,7 @@ def print_report(order: bool = True) -> None:
     if not order:
         order = 'desc'
 
-    for result, driver in drivers_query(s, order):
+    for result, driver in drivers_query(order):
         string_position = f'{result.position}.'
 
         row = (

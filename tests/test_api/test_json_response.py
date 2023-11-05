@@ -30,7 +30,6 @@ def test_json_api_drivers(client, name):
     data = json.loads(response.data)
     assert len(data) == DRIVER_AMOUNT
     assert name in data
-    # assert data['BHS']['name'] == 'Brendon Hartley'
 
 
 json_driver_test_case = [
@@ -42,7 +41,8 @@ json_driver_test_case = [
 ]
 
 
-@pytest.mark.parametrize('abbr, name, position, lap_time', json_driver_test_case)
+@pytest.mark.parametrize(
+    'abbr, name, position, lap_time', json_driver_test_case)
 def test_json_api_driver(client, abbr, name, position, lap_time):
     response = client.get(f'{API_DRIVERS_ROUTE}/{abbr}')
     assert response.status_code == 200
