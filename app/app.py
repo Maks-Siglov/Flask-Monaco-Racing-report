@@ -7,7 +7,7 @@ from app.api.report.routers import Report, Drivers, UniqueDriver, cache
 from app.db.session import set_session, pop_session, close_dbs
 from app.site.routers import report_bp, error_bp
 from app.bl.report.prepare import prepare_db
-from app.config import HOST, PORT, DEBUG
+from app.config import APP_PORT, APP_HOST, APP_DEBUG
 
 TEMPLATE_FOLDER = 'site/templates'
 
@@ -44,4 +44,4 @@ def create_app() -> Flask:
 
 
 if __name__ == '__main__':
-    create_app().run(host=HOST, port=PORT, debug=DEBUG)
+    create_app().run(host=APP_HOST, port=APP_PORT, debug=APP_DEBUG)

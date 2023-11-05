@@ -1,8 +1,7 @@
 import logging
-import os
 
 from sqlalchemy import create_engine, text, Engine
-from sqlalchemy.exc import OperationalError
+from sqlalchemy.exc import ProgrammingError
 
 from app.config import BASE_URL, DB_NAME, ENGINE_OPTIONS
 from app.db.models.base import Base
@@ -16,29 +15,31 @@ def create_database_or_engine(db_url: str, db_name: str, options: dict
      Engine"""
     try:
         _create_database(db_url, db_name)
-        log.warning(f'Creating database {db_name}')
-    except OperationalError:
-        pass
+    except ProgrammingError:
+        log.warning(f'Database {db_name} already EXISTS')
 
     return create_engine(f'{db_url}/{db_name}', **options)
 
 
 def _create_database(db_url: str, db_name: str) -> None:
     """This function creates database by db_url and db_name"""
-    with create_engine(db_url).begin() as connect:
+    with create_engine(db_url, isolation_level='AUTOCOMMIT').begin() as connect:
         connect.execute(text(f'CREATE DATABASE {db_name}'))
+        log.warning(f'Database {db_name} was CREATED')
 
 
 engine = create_database_or_engine(BASE_URL, DB_NAME, ENGINE_OPTIONS)
 
 
-def drop_database(db_path: str, db_name: str) -> None:
-    """This function delete database by db_url and db_name"""
-    my_db = f'{db_path}/{db_name}'
-    if os.path.exists(my_db):
-        os.remove(my_db)
-    else:
-        log.warning(f"Database {db_name} don't exist")
+def drop_database(db_url: str, db_name: str) -> None:
+    """This function"""
+    try:
+        with create_engine(db_url,
+                           isolation_level='AUTOCOMMIT').begin() as connect:
+            connect.execute(text(f'DROP DATABASE {db_name} WITH(FORCE)'))
+            log.warning(f'Database {db_name} was DROPPED')
+    except ProgrammingError:
+        log.error(f"Database {db_name} don't exist")
 
 
 def create_table(db_engine: Engine = engine) -> None:

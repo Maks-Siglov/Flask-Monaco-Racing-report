@@ -35,7 +35,7 @@ class Result(Base):
 
     @total_seconds.expression
     def time_difference(cls) -> int:
-        return (func.julianday(cls.end) - func.julianday(cls.start)) * 86400
+        return func.extract('epoch', cls.end - cls.start)
 
     @property
     def result(self):

@@ -2,7 +2,7 @@ import re
 
 from datetime import datetime
 from sqlalchemy import func, select
-from sqlalchemy.exc import OperationalError
+from sqlalchemy.exc import ProgrammingError
 
 from app.bl.report.utils.provider import read_log_files
 from app.db.models.reports import Driver, Result
@@ -24,12 +24,12 @@ def prepare_db(folder_path: str = FOLDER_DATA) -> None:
     try:
         s.user_db.execute(select(Driver)).all()
         s.user_db.execute(select(Result)).all()
-    except OperationalError:
+    except ProgrammingError:
         create_table()
         _convert_and_store_data(folder_path)
 
 
-def _convert_and_store_data(folder_path) -> None:
+def _convert_and_store_data(folder_path: str) -> None:
     """This function convert data from log files and stores it to database
 
      :param folder_path: path to the folder with log files
