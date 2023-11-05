@@ -1,44 +1,61 @@
+
+
+from typing import Any
+
 from flask import Flask
 from flasgger import Swagger
 from flask_restful import Api
-from typing import Any
 
-from app.api.report.routers import Report, Drivers, UniqueDriver, cache
-from app.db.session import set_session, pop_session, close_dbs
-from app.site.routers import report_bp, error_bp
-from app.bl.report.prepare import prepare_db
-from app.config import APP_PORT, APP_HOST, APP_DEBUG
+from app.config import (
+    APP_HOST,
+    APP_PORT,
+    APP_DEBUG,
+    TEMPLATE_FOLDER
+)
+from app.db.session import (
+    close_dbs,
+    pop_session,
+    set_session,
+)
+from app.site.routers import (
+    error_bp,
+    report_bp,
+)
+from app.api.report.routers import (
+    Report,
+    Drivers,
+    UniqueDriver,
+    cache,
+)
 
-TEMPLATE_FOLDER = 'site/templates'
+API_REPORT_ROUTE = '/api/v1/report'
+API_DRIVERS_ROUTE = '/api/v1/report/drivers'
 
 
 def create_app() -> Flask:
-
     app = Flask(__name__, template_folder=TEMPLATE_FOLDER)
     api = Api(app)
-    swagger = Swagger(app)
+    Swagger(app)
     cache.init_app(app)
-
-    prepare_db()
 
     app.before_request(set_session)
 
     @app.teardown_request
-    def handle_session(args) -> Any:
+    def handle_session(args: Any) -> Any:
         pop_session()
         return args
 
     @app.teardown_appcontext
-    def close_db(args) -> Any:
+    def close_db(args: Any) -> Any:
         close_dbs()
         return args
 
     app.register_blueprint(report_bp)
     app.register_blueprint(error_bp)
 
-    api.add_resource(Report, '/api/v1/report/')
-    api.add_resource(Drivers, '/api/v1/report/drivers/')
-    api.add_resource(UniqueDriver, '/api/v1/report/drivers/<string:driver_id>/')
+    api.add_resource(Report, API_REPORT_ROUTE)
+    api.add_resource(Drivers, API_DRIVERS_ROUTE)
+    api.add_resource(UniqueDriver, f'{API_DRIVERS_ROUTE}/<string:driver_id>')
 
     return app
 

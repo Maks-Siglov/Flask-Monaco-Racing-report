@@ -2,28 +2,24 @@ import pytest
 
 from xml.etree import ElementTree
 
+from app.app import API_REPORT_ROUTE, API_DRIVERS_ROUTE
+
 DRIVER_AMOUNT = 19
-API_XML_REPORT_ROUT = '/api/v1/report/?format=xml'
-API_XML_DRIVERS_ROUT = '/api/v1/report/drivers/?format=xml'
 
-xml_api_test_case = [
-    (0, 'DRR'),
-    (9, 'PGS'),
-    (18, 'KMH')
-]
+xml_api_test_case = [(0, 'DRR'), (9, 'PGS'), (18, 'KMH')]
 
 
-@pytest.mark.parametrize('position, abr', xml_api_test_case)
-def test_xml_api_report(client, position, abr):
-    response = client.get(API_XML_REPORT_ROUT)
+@pytest.mark.parametrize('position, abbr', xml_api_test_case)
+def test_xml_api_report(client, position, abbr):
+    response = client.get(API_REPORT_ROUTE, query_string={'format': 'xml'})
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'application/xml'
 
     root = ElementTree.fromstring(response.data)
     assert root.tag == 'report'
     assert len(root) == DRIVER_AMOUNT
-    abr_elements = root.findall('abr')
-    assert abr_elements[position].text == abr
+    abbr_elements = root.findall('abbr')
+    assert abbr_elements[position].text == abbr
 
 
 xml_api_drivers_case = [
@@ -35,7 +31,8 @@ xml_api_drivers_case = [
 
 @pytest.mark.parametrize('position, name', xml_api_drivers_case)
 def test_xml_api_drivers(client, position, name):
-    response = client.get(API_XML_DRIVERS_ROUT)
+    response = client.get(API_DRIVERS_ROUTE, query_string={'format': 'xml'})
+    assert response
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'application/xml'
 
@@ -55,9 +52,11 @@ xml_driver_test_case = [
 ]
 
 
-@pytest.mark.parametrize('abr, name, position, lap_time', xml_driver_test_case)
-def test_xml_api_driver(client, abr, name, position, lap_time):
-    response = client.get(f'/api/v1/report/drivers/{abr}/?format=xml')
+@pytest.mark.parametrize('abbr, name, position, lap_time', xml_driver_test_case)
+def test_xml_api_driver(client, abbr, name, position, lap_time):
+    response = client.get(
+        f'{API_DRIVERS_ROUTE}/{abbr}', query_string={'format': 'xml'}
+    )
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'application/xml'
 

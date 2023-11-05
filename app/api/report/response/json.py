@@ -1,26 +1,44 @@
-from sqlalchemy import ScalarResult
-from flask import make_response, jsonify, Response
-
-from app.db.models.reports import Result, Driver
 
 
-def json_response_api_report(query_result: ScalarResult) -> Response:
+from typing import Any, Sequence
+
+from flask import (
+    Response,
+    jsonify,
+    make_response,
+)
+
+from app.db.models.reports import (
+    Driver,
+    Result,
+)
+from sqlalchemy import Row
+
+
+def json_response_api_report(query_result: Sequence[Driver]) -> Response:
     """This function generate json response for /api/v1/report
 
-    :param query_result: ScalarResult of query through which we can iterate and
+    :param query_result: Sequence of query through which we can iterate and
     take drivers
     """
-    data = {driver.abr: {'name': driver.name, 'team': driver.team}
-            for driver in query_result}
+    data = {
+        driver.abbr: {'name': driver.name, 'team': driver.team}
+        for driver in query_result
+            }
 
     return make_response(jsonify(data))
 
 
-def json_response_api_drivers(query_result: list[tuple[Result, Driver]]
-                              ) -> Response:
-    """This function generate json response for /api/v1/report/drivers/"""
-    data = {driver.name: _prepare_json_driver(result, driver)
-            for result, driver in query_result}
+def json_response_api_drivers(
+        query_result: Sequence[Row[tuple[Result, Driver]]]
+) -> Response:
+    """This function generate json response
+     for /api/v1/report/drivers/
+     """
+    data = {
+        driver.name: _prepare_json_driver(result, driver)
+        for result, driver in query_result
+    }
 
     return make_response(jsonify(data))
 
@@ -34,11 +52,11 @@ def json_response_api_driver(result: Result, driver: Driver) -> Response:
     return make_response(jsonify(data))
 
 
-def _prepare_json_driver(result: Result, driver: Driver) -> dict:
+def _prepare_json_driver(result: Result, driver: Driver) -> dict[str, Any]:
     """This funtion prepare json data for json_response_api_drivers/driver
 
      :param result: result object which contains data about driver result
-     :param driver: driver object which contains data about drivers abr, team,
+     :param driver: driver object which contains data about drivers abbr, team,
      name
      :return: dict which contain data about driver
      """

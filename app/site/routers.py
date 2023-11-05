@@ -1,7 +1,18 @@
-from flask import Blueprint, render_template, request, make_response, Response
 
-from app.crud.report import report_query, drivers_query, unique_driver_query
-from app.db.session import s
+
+from flask import (
+    Response,
+    Blueprint,
+    request,
+    make_response,
+    render_template,
+)
+
+from app.crud.report import (
+    report_query,
+    drivers_query,
+    unique_driver_query,
+)
 
 report_bp = Blueprint('report', __name__)
 error_bp = Blueprint('errors', __name__)
@@ -15,9 +26,9 @@ def report() -> str:
     :return: render HTML template
     """
 
-    order = request.args.get('order')
+    order = request.args.get('order', 'asc')
 
-    result = report_query(s, order)
+    result = report_query(order)
 
     return render_template('report.html', query_result=result)
 
@@ -30,9 +41,9 @@ def drivers() -> str:
     :return: render HTML template
     """
 
-    order = request.args.get('order')
+    order = request.args.get('order', 'asc')
 
-    result = drivers_query(s, order)
+    result = drivers_query(order)
 
     return render_template('drivers.html', query_result=result)
 
@@ -44,7 +55,7 @@ def unique_driver(driver_id) -> str | Response:
     :param driver_id: driver abbreviation
     :return: render HTML template or Response if driver not exist in report
     """
-    item = unique_driver_query(s, driver_id)
+    item = unique_driver_query(driver_id)
 
     if not item:
         return make_response(render_template('404.html'), 404)

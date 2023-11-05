@@ -1,9 +1,15 @@
+
+
 from sqlalchemy import select
 
-from app.bl.report.prepare import prepare_db
-from app.db.models.reports import Driver, Result
+from app.bl.report.prepare import convert_and_store_data
 from app.db.session import s
 from app.crud.report import drivers_query
+from app.db.models.reports import (
+    Driver,
+    Result,
+)
+
 
 SEPARATOR_SYMBOL = '-'
 SEPARATOR_LENGTH = 64
@@ -13,8 +19,9 @@ TEAM_INDENT = 26
 INDEX_UNDERLINE = 15
 
 
-def build_from_parser(args_files: str, args_driver: str,
-                      args_desc: bool) -> None:
+def build_from_parser(
+        args_files: str, args_driver: str | None, args_desc: bool
+) -> None:
     """This function takes argument for parser and build report
 
     :param args_files: path to the data folder, argument from start_parser()
@@ -24,7 +31,7 @@ def build_from_parser(args_files: str, args_driver: str,
      if True order-descending, if False order-ascending
     """
 
-    prepare_db(args_files)
+    convert_and_store_data(args_files)
 
     if args_driver is None:
         order = False if args_desc else True
@@ -48,10 +55,12 @@ def print_report(order: bool = True) -> None:
     for result, driver in drivers_query(s, order):
         string_position = f'{result.position}.'
 
-        row = (f'{string_position:<{INDEX_INDENT}}'
-               f' {driver.name:<{NAME_INDENT}} | '
-               f' {driver.team:<{TEAM_INDENT}} | '
-               f'{result.result[0]}:{result.result[1]}')
+        row = (
+            f'{string_position:<{INDEX_INDENT}}'
+            f' {driver.name:<{NAME_INDENT}} | '
+            f' {driver.team:<{TEAM_INDENT}} | '
+            f'{result.result[0]}:{result.result[1]}'
+        )
 
         if result.position != index_underline:
             print(row)

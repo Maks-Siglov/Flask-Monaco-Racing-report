@@ -1,12 +1,25 @@
+
+
 import click
 import os
 
 from app.bl.report.console_view import build_from_parser
-from app.db.engine import create_database_or_engine, drop_database
-from app.config import DB_NAME, BASE_URL, ENGINE_OPTIONS
-from app.bl.report.prepare import prepare_db
-
-FOLDER_DATA = r'app/bl/data'
+from app.bl.report.prepare import convert_and_store_data
+from app.db.utils import create_table
+from app.db.session import (
+    set_session,
+    pop_session,
+    close_dbs
+)
+from app.db.engine import (
+    create_database,
+    drop_database
+)
+from app.config import (
+    DB_NAME,
+    BASE_URL,
+    FOLDER_DATA
+)
 
 
 @click.group()
@@ -41,14 +54,18 @@ def db(db_name, create, drop, recreate, load):
         return drop_database(BASE_URL, db_name)
 
     if create:
-        create_database_or_engine(BASE_URL, db_name, ENGINE_OPTIONS)
+        create_database(BASE_URL, db_name)
 
     if recreate:
         drop_database(BASE_URL, db_name)
-        create_database_or_engine(BASE_URL, db_name, ENGINE_OPTIONS)
+        create_database(BASE_URL, db_name)
 
     if load:
-        prepare_db()
+        set_session()
+        create_table()
+        convert_and_store_data(FOLDER_DATA)
+        pop_session()
+        close_dbs()
 
 
 if __name__ == '__main__':

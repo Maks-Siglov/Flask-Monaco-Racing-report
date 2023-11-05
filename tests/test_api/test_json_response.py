@@ -2,21 +2,21 @@ import pytest
 import math
 import json
 
+from app.app import API_REPORT_ROUTE, API_DRIVERS_ROUTE
+
 DRIVER_AMOUNT = 19
-API_REPORT_ROUT = '/api/v1/report/'
-API_DRIVERS_ROUT = '/api/v1/report/drivers/'
 
-abr_cases = ['BHS', 'MES', 'VBM']
+abbr_cases = ['BHS', 'MES', 'VBM']
 
 
-@pytest.mark.parametrize('abr', abr_cases)
-def test_json_api_report(client, abr):
-    response = client.get(API_REPORT_ROUT)
+@pytest.mark.parametrize('abbr', abbr_cases)
+def test_json_api_report(client, abbr):
+    response = client.get(API_REPORT_ROUTE)
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'application/json'
     data = json.loads(response.data)
     assert len(data) == DRIVER_AMOUNT
-    assert abr in data
+    assert abbr in data
 
 
 name_cases = ['Brendon Hartley', 'Marcus Ericsson', 'Valtteri Bottas']
@@ -24,12 +24,13 @@ name_cases = ['Brendon Hartley', 'Marcus Ericsson', 'Valtteri Bottas']
 
 @pytest.mark.parametrize('name', name_cases)
 def test_json_api_drivers(client, name):
-    response = client.get(API_DRIVERS_ROUT)
+    response = client.get(API_DRIVERS_ROUTE)
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'application/json'
     data = json.loads(response.data)
     assert len(data) == DRIVER_AMOUNT
     assert name in data
+    # assert data['BHS']['name'] == 'Brendon Hartley'
 
 
 json_driver_test_case = [
@@ -41,9 +42,9 @@ json_driver_test_case = [
 ]
 
 
-@pytest.mark.parametrize('abr, name, position, lap_time', json_driver_test_case)
-def test_json_api_driver(client, abr, name, position, lap_time):
-    response = client.get(f'{API_DRIVERS_ROUT}{abr}/')
+@pytest.mark.parametrize('abbr, name, position, lap_time', json_driver_test_case)
+def test_json_api_driver(client, abbr, name, position, lap_time):
+    response = client.get(f'{API_DRIVERS_ROUTE}/{abbr}')
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'application/json'
     data = json.loads(response.data)

@@ -1,35 +1,25 @@
+
+
 import re
 
 from datetime import datetime
 from sqlalchemy import func, select
-from sqlalchemy.exc import ProgrammingError
 
 from app.bl.report.utils.provider import read_log_files
-from app.db.models.reports import Driver, Result
-from app.db.engine import create_table
-from app.db.session import set_session, s
+from app.db.models.reports import (
+    Driver,
+    Result,
+)
+
+from app.db.session import s
+from app.config import FOLDER_DATA
+
 
 PATTERN = re.compile(r'(^[A-Z]+)(\S+)')
 DATE_FORMAT = '%Y-%m-%d_%H:%M:%S.%f'
-FOLDER_DATA = r'app/bl/data'
 
 
-def prepare_db(folder_path: str = FOLDER_DATA) -> None:
-    """This function checks whether tables exist in the database and whether
-     they contain data, if not, the tables are created and filled with data.
-
-    :param folder_path: path to the folder with log files
-    """
-    set_session()
-    try:
-        s.user_db.execute(select(Driver)).all()
-        s.user_db.execute(select(Result)).all()
-    except ProgrammingError:
-        create_table()
-        _convert_and_store_data(folder_path)
-
-
-def _convert_and_store_data(folder_path: str) -> None:
+def convert_and_store_data(folder_path: str = FOLDER_DATA) -> None:
     """This function convert data from log files and stores it to database
 
      :param folder_path: path to the folder with log files
@@ -41,16 +31,15 @@ def _convert_and_store_data(folder_path: str) -> None:
 
     driver_results = []
     for param in abbreviations_data:
-        abr, name, team = param.strip().split('_')
-        start, end = prepare_start[abr], prepare_end[abr]
+        abbr, name, team = param.strip().split('_')
+        start, end = prepare_start[abbr], prepare_end[abbr]
 
-        driver = Driver(abr=abr, name=name, team=team)
+        driver = Driver(abbr=abbr, name=name, team=team)
         result = Result(driver=driver, start=start, end=end)
         driver_results.append(result)
 
     s.user_db.add_all(driver_results)
-    sort_results(s.user_db)
-    s.user_db.commit()
+    sort_results(driver_results)
 
 
 def _prepare_data_from_file(file_data: list[str]) -> dict[str, datetime]:
@@ -64,18 +53,20 @@ def _prepare_data_from_file(file_data: list[str]) -> dict[str, datetime]:
 
     for param in file_data:
         match = PATTERN.match(param)
-        abr, time = match.groups()
-        prepare_result[abr] = datetime.strptime(time, DATE_FORMAT)
+        abbr, time = match.groups()
+        prepare_result[abbr] = datetime.strptime(time, DATE_FORMAT)
 
     return prepare_result
 
 
-def sort_results(s) -> None:
+def sort_results(driver_results: list[Result]) -> None:
     """This function sorts results by his owner inside a database for and set
      position to each
     """
-    statement = select(Result).order_by(Result.time_difference < 0,
-                                        func.ABS(Result.time_difference))
+    sorted_result = sorted(
+        driver_results,
+        key=lambda item: (item.total_seconds < 0, abs(item.total_seconds))
+    )
 
-    for pos, result in enumerate(s.execute(statement).scalars(), start=1):
+    for pos, result in enumerate(sorted_result, start=1):
         result.position = pos

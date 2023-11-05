@@ -1,3 +1,5 @@
+
+
 import os
 
 from dotenv import load_dotenv
@@ -23,6 +25,12 @@ APP_HOST = os.getenv('APP_HOST')
 APP_PORT = os.getenv('APP_PORT')
 APP_DEBUG = os.getenv('app_debug')
 
-BASE_URL = f'{ENGINE}://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}'
+if ENGINE == 'postgresql+psycopg2':
+    BASE_URL = f'{ENGINE}://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}'
+else:
+    BASE_URL = ''
 
 ENGINE_OPTIONS = {'echo': True}
+
+FOLDER_DATA = r'app/bl/data'
+TEMPLATE_FOLDER = 'site/templates'

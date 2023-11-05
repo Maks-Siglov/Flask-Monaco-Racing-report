@@ -1,7 +1,21 @@
-from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import String, Integer, ForeignKey, func, DateTime
-from sqlalchemy.ext.hybrid import hybrid_property
+
+
 from datetime import datetime
+
+from sqlalchemy import (
+    String,
+    ForeignKey,
+    ColumnElement,
+    Cast,
+    Float
+)
+from sqlalchemy.orm import (
+    Mapped,
+    relationship,
+    mapped_column,
+)
+from sqlalchemy.ext.hybrid import hybrid_property
+
 
 from app.db.models.base import Base
 
@@ -9,12 +23,12 @@ from app.db.models.base import Base
 class Driver(Base):
     __tablename__ = 'drivers'
 
-    id: Mapped[int] = mapped_column(Integer, primary_key=True)
-    abr: Mapped[str] = mapped_column(String(5))
+    id: Mapped[int] = mapped_column(primary_key=True)
+    abbr: Mapped[str] = mapped_column(String(5))
     name: Mapped[str] = mapped_column(String(30))
     team: Mapped[str] = mapped_column(String(50))
 
-    result = relationship('Result', back_populates='driver')
+    result: Mapped['Result'] = relationship(back_populates='driver')
 
 
 class Result(Base):
@@ -22,22 +36,23 @@ class Result(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
     driver_id: Mapped[int] = mapped_column(
-        Integer, ForeignKey('drivers.id'))
-    start: Mapped[datetime] = mapped_column(DateTime)
-    end: Mapped[datetime] = mapped_column(DateTime)
-    position: Mapped[int] = mapped_column(Integer, nullable=True)
+        ForeignKey('drivers.id', ondelete='RESTRICT')
+    )
+    start: Mapped[datetime] = mapped_column()
+    end: Mapped[datetime] = mapped_column()
+    position: Mapped[int] = mapped_column(nullable=True)
 
-    driver = relationship('Driver', back_populates='result')
+    driver: Mapped['Driver'] = relationship(back_populates='result')
 
     @hybrid_property
-    def total_seconds(self) -> int:
+    def total_seconds(self) -> float:
         return (self.end - self.start).total_seconds()
 
-    @total_seconds.expression
-    def time_difference(cls) -> int:
-        return func.extract('epoch', cls.end - cls.start)
+    @total_seconds.inplace.expression
+    def time_difference(cls) -> ColumnElement[float]:
+        return Cast((cls.end - cls.start), type_=Float)
 
     @property
-    def result(self):
+    def result(self) -> tuple[int, float]:
         minutes, seconds = divmod(self.total_seconds, 60)
         return int(minutes), round(seconds, 3)

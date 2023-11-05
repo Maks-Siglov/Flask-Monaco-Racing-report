@@ -18,7 +18,7 @@
         <tr>
             <td>{{ result.position}}.</td>
             <td>{{ driver.name }}</td>
-            <td><a href="{{ url_for('report.unique_driver', driver_id=driver.abr) }}">{{ driver.abr }}</a></td>
+            <td><a href="{{ url_for('report.unique_driver', driver_id=driver.abbr) }}">{{ driver.abbr }}</a></td>
             <td>{{ result.result[0] }}:{{ result.result[1] }}</td>
         </tr>
     {% endfor %}

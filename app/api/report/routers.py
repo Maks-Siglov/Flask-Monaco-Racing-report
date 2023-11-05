@@ -1,19 +1,31 @@
-from flask import make_response, render_template, Response
-from flask_restful import Resource, reqparse
-from flask_caching import Cache
 
-from app.api.report.response.json import (
-    json_response_api_report,
-    json_response_api_drivers,
-    json_response_api_driver
+
+from flask import (
+    Response,
+    make_response,
+    render_template,
+)
+from flask_caching import Cache
+from flask_restful import (
+    Resource,
+    reqparse,
+)
+
+from app.crud.report import (
+    report_query,
+    drivers_query,
+    unique_driver_query,
 )
 from app.api.report.response.xml import (
+    xml_response_api_driver,
     xml_response_api_report,
     xml_response_api_drivers,
-    xml_response_api_driver
 )
-from app.crud.report import report_query, drivers_query, unique_driver_query
-from app.db.session import s
+from app.api.report.response.json import (
+    json_response_api_driver,
+    json_response_api_report,
+    json_response_api_drivers,
+)
 
 parser = reqparse.RequestParser()
 parser.add_argument('format', type=str, location='args', default='json')
@@ -52,16 +64,16 @@ class Report(Resource):
                   type: string
         """
         args = parser.parse_args()
+        _format = args['format']
+        order = args['order']
 
-        cache_key = f"report_{args['order']}_{args['format']}"
-        cache_response = cache.get(cache_key)
-        if cache_response:
+        cache_key = f"report_{order}_{_format}"
+        if cache_response := cache.get(cache_key):
             return cache_response
 
-        order = args['order']
-        result = report_query(s, order)
+        result = report_query(order)
 
-        if args['format'] == 'xml':
+        if _format == 'xml':
             response = xml_response_api_report(result)
         else:
             response = json_response_api_report(result)
@@ -101,16 +113,16 @@ class Drivers(Resource):
                   type: string
         """
         args = parser.parse_args()
+        _format = args['format']
+        order = args['order']
 
-        cache_key = f"drivers{args['order']}_{args['format']}"
-        cache_response = cache.get(cache_key)
-        if cache_response:
+        cache_key = f"report_{order}_{_format}"
+        if cache_response := cache.get(cache_key):
             return cache_response
 
-        order = args['order']
-        result = drivers_query(s, order)
+        result = drivers_query(order)
 
-        if args['format'] == 'xml':
+        if _format == 'xml':
             response = xml_response_api_drivers(result)
         else:
             response = json_response_api_drivers(result)
@@ -154,21 +166,21 @@ class UniqueDriver(Resource):
              descriptions: Driver not found, return an error page
         """
         args = parser.parse_args()
+        _format = args['format']
 
-        cache_key = f"driver_{driver_id}_{args['format']}"
-        cache_response = cache.get(cache_key)
-        if cache_response:
+        cache_key = f"driver_{driver_id}_{_format}"
+        if cache_response := cache.get(cache_key):
             return cache_response
 
-        item = unique_driver_query(s, driver_id)
+        item = unique_driver_query(driver_id)
 
-        if item:
-            result, driver = item
-            if args['format'] == 'xml':
-                response = xml_response_api_driver(result, driver)
-            else:
-                response = json_response_api_driver(result, driver)
+        if item is None:
+            return make_response(render_template('404.html'), 404)
 
-            return response
+        result, driver = item
+        if _format == 'xml':
+            response = xml_response_api_driver(result, driver)
+        else:
+            response = json_response_api_driver(result, driver)
 
-        return make_response(render_template('404.html'), 404)
+        return response
