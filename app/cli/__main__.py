@@ -19,10 +19,6 @@ def cli():
 @click.option('--driver', help='Shows statistic about driver ')
 @click.option('--desc', is_flag=True, default=False, help='Descending order')
 def report(files, driver, desc):
-    """This function collecting argument for command line
-
-    :return: arguments for build parser
-    """
     if not os.path.exists(files):
         raise ValueError(f"Path {files} from --file argument don't exist")
     build_from_parser(files, driver, desc)
