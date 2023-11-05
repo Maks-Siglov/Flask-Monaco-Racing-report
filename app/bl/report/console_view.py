@@ -2,7 +2,7 @@ from sqlalchemy import select
 
 from app.bl.report.prepare import prepare_db
 from app.db.models.reports import Driver, Result
-from app.db.engine import get_session
+from app.db.session import s
 from app.crud.report import drivers_query
 
 SEPARATOR_SYMBOL = '-'
@@ -40,25 +40,25 @@ def print_report(order: bool = True) -> None:
     :param order: shows in which order report should be
     if we use descending ordering
     """
-    with get_session() as session:
-        index_underline = INDEX_UNDERLINE + int(order)
-        if not order:
-            order = 'desc'
 
-        for result, driver in drivers_query(session, order):
-            string_position = f'{result.position}.'
+    index_underline = INDEX_UNDERLINE + int(order)
+    if not order:
+        order = 'desc'
 
-            row = (f'{string_position:<{INDEX_INDENT}}'
-                   f' {driver.name:<{NAME_INDENT}} | '
-                   f' {driver.team:<{TEAM_INDENT}} | '
-                   f'{result.result[0]}:{result.result[1]}')
+    for result, driver in drivers_query(s, order):
+        string_position = f'{result.position}.'
 
-            if result.position != index_underline:
-                print(row)
+        row = (f'{string_position:<{INDEX_INDENT}}'
+               f' {driver.name:<{NAME_INDENT}} | '
+               f' {driver.team:<{TEAM_INDENT}} | '
+               f'{result.result[0]}:{result.result[1]}')
 
-            else:
-                print(SEPARATOR_SYMBOL * SEPARATOR_LENGTH)
-                print(row)
+        if result.position != index_underline:
+            print(row)
+
+        else:
+            print(SEPARATOR_SYMBOL * SEPARATOR_LENGTH)
+            print(row)
 
 
 def report_unique_driver(driver_name: str) -> None:
@@ -66,13 +66,12 @@ def report_unique_driver(driver_name: str) -> None:
 
     :param driver_name: name of the driver
     """
-    with get_session() as session:
-        statement = select(Result, Driver).join(Driver).where(
-            Driver.name == driver_name)
-        item = session.execute(statement).one_or_none()
-        if item:
-            result, driver = item
-            print(f'{result.position}. {driver.name} | {driver.team} |'
-                  f' {result.result[0]}:{result.result[1]}')
-        else:
-            print(f"Driver {driver_name} don't exist")
+    statement = select(Result, Driver).join(Driver).where(
+        Driver.name == driver_name)
+    item = s.user_db.execute(statement).one_or_none()
+    if item:
+        result, driver = item
+        print(f'{result.position}. {driver.name} | {driver.team} |'
+              f' {result.result[0]}:{result.result[1]}')
+    else:
+        print(f"Driver {driver_name} don't exist")

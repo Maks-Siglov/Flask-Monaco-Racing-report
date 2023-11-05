@@ -3,7 +3,7 @@ import pytest
 from app.config import BASE_URL, DB_NAME
 from app.db.engine import create_database_or_engine
 from app.db.session import set_session, pop_session, s
-from app.db.utils import create_table, drop_table
+from app.db.engine import create_table, drop_table
 
 
 @pytest.fixture(scope='session')

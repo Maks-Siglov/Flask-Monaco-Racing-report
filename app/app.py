@@ -26,7 +26,7 @@ def create_app() -> Flask:
     @app.teardown_request
     def handle_session(args) -> Any:
         pop_session()
-        return
+        return args
 
     @app.teardown_appcontext
     def close_db(args) -> Any:

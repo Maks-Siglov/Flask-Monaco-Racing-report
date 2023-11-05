@@ -6,7 +6,7 @@ from sqlalchemy.exc import OperationalError
 
 from app.bl.report.utils.provider import read_log_files
 from app.db.models.reports import Driver, Result
-from app.db.utils import create_table
+from app.db.engine import create_table
 from app.db.session import set_session, s
 
 PATTERN = re.compile(r'(^[A-Z]+)(\S+)')
