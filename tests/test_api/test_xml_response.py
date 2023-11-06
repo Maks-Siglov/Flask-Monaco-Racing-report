@@ -32,14 +32,15 @@ xml_api_drivers_case = [
 @pytest.mark.parametrize('position, name', xml_api_drivers_case)
 def test_xml_api_drivers(client, position, name):
     response = client.get(API_DRIVERS_ROUTE, query_string={'format': 'xml'})
-    assert response
+    print(response.request)
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'application/xml'
+    print(response.data)
 
-    root = ElementTree.fromstring(response.data)
-    assert root.tag == 'drivers'
-    assert len(root) == DRIVER_AMOUNT
-    driver_elements = root.findall('driver')
+    main = ElementTree.fromstring(response.data)
+    assert main.tag == 'drivers'
+    assert len(main) == DRIVER_AMOUNT
+    driver_elements = main.findall('driver')
     assert driver_elements[position].text == name
 
 

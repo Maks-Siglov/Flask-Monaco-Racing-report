@@ -27,13 +27,13 @@ from app.bl.report.prepare import convert_and_store_data
 BASE_SUPERUSER_URL = f'{BASE_URL}/{POSTGRESS_DB}'
 
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def app():
     app = create_app()
     yield app
 
 
-@pytest.fixture
+@pytest.fixture(scope='session')
 def client(app):
     return app.test_client()
 

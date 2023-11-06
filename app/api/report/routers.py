@@ -116,7 +116,7 @@ class Drivers(Resource):
         _format = args.get('format', 'json')
         order = args.get('order', 'asc')
 
-        cache_key = f"report_{order}_{_format}"
+        cache_key = f"drivers_{order}_{_format}"
         if cache_response := cache.get(cache_key):
             return cache_response
 
