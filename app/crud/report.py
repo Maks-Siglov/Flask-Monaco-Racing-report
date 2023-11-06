@@ -34,7 +34,7 @@ def drivers_query(order) -> Sequence[Row[tuple[Result, Driver]]]:
     """This function creates query for drivers router
 
     :return: Sequence of rows with tuples which contains two object,
-     first - Result with results data, second - Driver to whom result belongs
+    first - Result with results data, second - Driver to whom result belongs
     with his abbr, team and name
     """
     if order == 'desc':

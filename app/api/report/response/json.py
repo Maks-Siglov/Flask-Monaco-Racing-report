@@ -14,6 +14,7 @@ from app.db.models.reports import (
     Result,
 )
 
+
 def json_response_api_report(query_result: Sequence[Driver]) -> Response:
     """This function generate json response for /api/v1/report
 

@@ -90,7 +90,7 @@ def pop_session() -> None:
 
 def close_dbs() -> None:
     """This function should use before app teardown it goes through each
-     EnginePool which was created and dispose his engine"""
+    EnginePool which was created and dispose his engine"""
     for ses_pool in session_pools.values():
         ses_pool.engine.dispose()
 

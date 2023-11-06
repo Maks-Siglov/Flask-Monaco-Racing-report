@@ -52,7 +52,7 @@ def report(files: str, driver: str, desc: bool) -> None:
 @click.option('--drop', is_flag=True, help='Drop database')
 @click.option('--recreate', is_flag=True, help='Recreate database')
 @click.option('--load', is_flag=True, help='Insert data to the database')
-def db(db_name, create, drop, recreate, load):
+def db(db_name, create, drop, recreate, load) -> None:
 
     base_superuser_url = f'{BASE_URL}/{POSTGRESS_DB}'
 
