@@ -37,7 +37,7 @@ json_driver_test_case = [
     ('FAM', 'Fernando Alonso', 5, 72.657),
     ('CSR', 'Carlos Sainz', 10, 72.95),
     ('KMH', 'Kevin Magnussen', 15, 73.393),
-    ('LHM', 'Lewis Hamilton', 19, -407.54)
+    ('LHM', 'Lewis Hamilton', 19, -407.54),
 ]
 
 

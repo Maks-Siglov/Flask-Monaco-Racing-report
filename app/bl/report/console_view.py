@@ -2,7 +2,6 @@
 
 from sqlalchemy import select
 
-from app.bl.report.prepare import convert_and_store_data
 from app.db.session import s
 from app.crud.report import drivers_query
 from app.db.models.reports import (
@@ -26,9 +25,9 @@ def build_from_parser(
 
     :param args_files: path to the data folder, argument from start_parser()
     :param args_driver: name of the driver about whom we show the statistic,
-     if None we don't show
+    if None we don't show
     :param args_desc: order in which we show drivers statistic,
-     if True order-descending, if False order-ascending
+    if True order-descending, if False order-ascending
     """
 
     if args_driver is None:
@@ -78,7 +77,9 @@ def report_unique_driver(driver_name: str) -> None:
     item = s.user_db.execute(statement).one_or_none()
     if item:
         result, driver = item
-        print(f'{result.position}. {driver.name} | {driver.team} |'
-              f' {result.result[0]}:{result.result[1]}')
+        print(
+            f'{result.position}. {driver.name} | {driver.team} |'
+            f' {result.result[0]}:{result.result[1]}'
+        )
     else:
         print(f"Driver {driver_name} don't exist")

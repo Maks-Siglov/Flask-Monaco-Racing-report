@@ -10,7 +10,7 @@ from app.config import (
     APP_HOST,
     APP_PORT,
     APP_DEBUG,
-    TEMPLATE_FOLDER
+    TEMPLATE_FOLDER,
 )
 from app.db.session import (
     close_dbs,
@@ -61,4 +61,5 @@ def create_app() -> Flask:
 
 
 if __name__ == '__main__':
+    assert APP_PORT
     create_app().run(host=APP_HOST, port=APP_PORT, debug=APP_DEBUG)

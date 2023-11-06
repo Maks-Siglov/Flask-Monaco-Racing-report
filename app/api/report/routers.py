@@ -64,8 +64,8 @@ class Report(Resource):
                   type: string
         """
         args = parser.parse_args()
-        _format = args['format']
-        order = args['order']
+        _format = args.get('format', 'json')
+        order = args.get('order', 'asc')
 
         cache_key = f"report_{order}_{_format}"
         if cache_response := cache.get(cache_key):
@@ -113,8 +113,8 @@ class Drivers(Resource):
                   type: string
         """
         args = parser.parse_args()
-        _format = args['format']
-        order = args['order']
+        _format = args.get('format', 'json')
+        order = args.get('order', 'asc')
 
         cache_key = f"report_{order}_{_format}"
         if cache_response := cache.get(cache_key):
@@ -135,7 +135,7 @@ class Drivers(Resource):
 class UniqueDriver(Resource):
     def get(self, driver_id: str) -> Response:
         """
-        This is the documentation for /api/v1/report/drivers/<string:driver_id>/
+        This is the documentation for /api/v1/report/drivers/<string:driver_id>
          endpoint
 
          GET:
@@ -166,7 +166,7 @@ class UniqueDriver(Resource):
              descriptions: Driver not found, return an error page
         """
         args = parser.parse_args()
-        _format = args['format']
+        _format = args.get('format', 'json')
 
         cache_key = f"driver_{driver_id}_{_format}"
         if cache_response := cache.get(cache_key):
@@ -183,4 +183,5 @@ class UniqueDriver(Resource):
         else:
             response = json_response_api_driver(result, driver)
 
+        cache.set(cache_key, response, timeout=3600)
         return response

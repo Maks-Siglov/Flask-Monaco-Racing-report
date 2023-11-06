@@ -30,8 +30,7 @@ def test_sort_drivers(fresh_db):
 
     sort_results(results_list)
 
-    statement = select(Result, Driver).join(Driver).order_by(
-            Result.position)
+    statement = select(Result, Driver).join(Driver).order_by(Result.position)
     sorted_results = s.user_db.execute(statement).scalars().all()
 
     assert len(sorted_results) == 2

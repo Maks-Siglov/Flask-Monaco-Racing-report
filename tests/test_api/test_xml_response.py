@@ -6,7 +6,7 @@ from app.app import API_REPORT_ROUTE, API_DRIVERS_ROUTE
 
 DRIVER_AMOUNT = 19
 
-xml_api_test_case = [(0, 'DRR'), (9, 'PGS'), (18, 'KMH')]
+xml_api_test_case = [(0, 'BHS'), (9, 'LSW'), (18, 'VBM')]
 
 
 @pytest.mark.parametrize('position, abbr', xml_api_test_case)
@@ -25,7 +25,7 @@ def test_xml_api_report(client, position, abbr):
 xml_api_drivers_case = [
     (0, 'Sebastian Vettel'),
     (9, 'Carlos Sainz'),
-    (18, 'Lewis Hamilton')
+    (18, 'Lewis Hamilton'),
 ]
 
 
@@ -48,7 +48,7 @@ xml_driver_test_case = [
     ('FAM', 'Fernando Alonso', '5', '72.657'),
     ('CSR', 'Carlos Sainz', '10', '72.95'),
     ('KMH', 'Kevin Magnussen', '15', '73.393'),
-    ('LHM', 'Lewis Hamilton', '19', '-407.54')
+    ('LHM', 'Lewis Hamilton', '19', '-407.54'),
 ]
 
 

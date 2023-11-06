@@ -1,8 +1,8 @@
 
 
 from typing import Sequence
-
 from xml.etree import ElementTree
+from sqlalchemy import Row
 
 from flask import (
     Response,
@@ -12,13 +12,12 @@ from app.db.models.reports import (
     Driver,
     Result,
 )
-from sqlalchemy import Row
 
 
 def xml_response_api_report(query_result: Sequence[Driver]) -> Response:
     """This function generate xml response for /api/v1/report?format=xml
 
-    :param query_result: ScalarResult of query through which we can iterate and
+    :param query_result: Sequence with Drivers through which we can iterate and
     take drivers
     """
     root = ElementTree.Element('report')
@@ -80,13 +79,13 @@ def _prepare_driver_xml(
     driver_element: ElementTree.Element, result: Result, driver: Driver
 ) -> None:
     """This function prepare xml data about single driver, it takes
-     driver_element (element of xml ElementTree), add subElements and values
+    driver_element (element of xml ElementTree), add subElements and values
     (text) to it for forming xml tree for xml_response_api_drivers/driver
 
-     :param driver_element: element to whom we add subElements and value
-     :param result: result object which contains data about driver result
-     :param driver: driver object which contains data about drivers abbr, team,
-     name
+    :param driver_element: element to whom we add subElements and value
+    :param result: result object which contains data about driver result
+    :param driver: driver object which contains data about drivers abbr, team,
+    name
     """
     team = ElementTree.SubElement(driver_element, 'team')
     position = ElementTree.SubElement(driver_element, 'position')

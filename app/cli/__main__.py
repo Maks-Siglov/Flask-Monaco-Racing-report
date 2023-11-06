@@ -1,7 +1,7 @@
 
 
-import click
 import os
+import click
 
 from app.bl.report.console_view import build_from_parser
 from app.bl.report.prepare import convert_and_store_data
@@ -11,13 +11,14 @@ from app.db.session import (
     pop_session,
     close_dbs
 )
-from app.db.engine import (
+from app.db.utils import (
     create_database,
     drop_database
 )
 from app.config import (
     DB_NAME,
     BASE_URL,
+    POSTGRESS_DB,
     FOLDER_DATA
 )
 
@@ -42,6 +43,7 @@ def report(files: str, driver: str, desc: bool) -> None:
         raise ValueError(f"Path {files} from --file argument don't exist")
     set_session()
     build_from_parser(files, driver, desc)
+    close_dbs()
 
 
 @cli.command()
@@ -51,15 +53,18 @@ def report(files: str, driver: str, desc: bool) -> None:
 @click.option('--recreate', is_flag=True, help='Recreate database')
 @click.option('--load', is_flag=True, help='Insert data to the database')
 def db(db_name, create, drop, recreate, load):
+
+    base_superuser_url = f'{BASE_URL}/{POSTGRESS_DB}'
+
     if drop:
-        return drop_database(BASE_URL, db_name)
+        return drop_database(base_superuser_url, db_name)
 
     if create:
-        create_database(BASE_URL, db_name)
+        create_database(base_superuser_url, db_name)
 
     if recreate:
-        drop_database(BASE_URL, db_name)
-        create_database(BASE_URL, db_name)
+        drop_database(base_superuser_url, db_name)
+        create_database(base_superuser_url, db_name)
 
     if load:
         set_session()

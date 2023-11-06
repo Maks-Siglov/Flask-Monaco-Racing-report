@@ -6,13 +6,14 @@ from app.app import create_app
 from app.config import (
     DB_NAME,
     BASE_URL,
+    POSTGRESS_DB,
     FOLDER_DATA,
 )
 from app.db.utils import (
     drop_table,
     create_table,
 )
-from app.db.engine import (
+from app.db.utils import (
     drop_database,
     create_database,
 )
@@ -22,6 +23,8 @@ from app.db.session import (
     set_session,
 )
 from app.bl.report.prepare import convert_and_store_data
+
+BASE_SUPERUSER_URL = f'{BASE_URL}/{POSTGRESS_DB}'
 
 
 @pytest.fixture
@@ -37,7 +40,7 @@ def client(app):
 
 @pytest.hookimpl(tryfirst=True)
 def pytest_sessionstart(session):
-    create_database(BASE_URL, DB_NAME)
+    create_database(BASE_SUPERUSER_URL, DB_NAME)
     set_session()
     create_table()
     convert_and_store_data(FOLDER_DATA)
@@ -52,7 +55,7 @@ def pytest_sessionfinish(session, exitstatus):
         print('\nClose DB')
 
     try:
-        drop_database(BASE_URL, DB_NAME)
+        drop_database(BASE_SUPERUSER_URL, DB_NAME)
     finally:
         print(f'DROP DB {DB_NAME}')
 

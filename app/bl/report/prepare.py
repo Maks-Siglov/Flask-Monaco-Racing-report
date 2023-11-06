@@ -3,9 +3,8 @@
 import re
 
 from datetime import datetime
-from sqlalchemy import func, select
 
-from app.bl.report.utils.provider import read_log_files
+from app.bl.report.provider import read_log_files
 from app.db.models.reports import (
     Driver,
     Result,
@@ -38,8 +37,7 @@ def convert_and_store_data(folder_path: str = FOLDER_DATA) -> None:
         result = Result(driver=driver, start=start, end=end)
         driver_results.append(result)
 
-    s.user_db.add_all(driver_results)
-    sort_results(driver_results)
+    s.user_db.add_all(sort_results(driver_results))
 
 
 def _prepare_data_from_file(file_data: list[str]) -> dict[str, datetime]:
@@ -53,15 +51,16 @@ def _prepare_data_from_file(file_data: list[str]) -> dict[str, datetime]:
 
     for param in file_data:
         match = PATTERN.match(param)
+        assert match
         abbr, time = match.groups()
         prepare_result[abbr] = datetime.strptime(time, DATE_FORMAT)
 
     return prepare_result
 
 
-def sort_results(driver_results: list[Result]) -> None:
+def sort_results(driver_results: list[Result]) -> list[Result]:
     """This function sorts results by his owner inside a database for and set
-     position to each
+    position to each
     """
     sorted_result = sorted(
         driver_results,
@@ -70,3 +69,5 @@ def sort_results(driver_results: list[Result]) -> None:
 
     for pos, result in enumerate(sorted_result, start=1):
         result.position = pos
+
+    return sorted_result

@@ -77,8 +77,8 @@ def _create_sessionmaker(engine: Engine) -> sessionmaker:
 
 def pop_session() -> None:
     """This function should use after each request, it commits changes to db
-     if exception occur make rollback and in each case close sessionmaker of the
-     current EnginePool"""
+    if exception occur make rollback and in each case close sessionmaker of
+    the current EnginePool"""
     try:
         s.user_db.commit()
     except Exception as e:

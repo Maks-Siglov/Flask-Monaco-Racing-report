@@ -3,11 +3,11 @@
 from datetime import datetime
 
 from sqlalchemy import (
+    Cast,
     String,
     ForeignKey,
     ColumnElement,
-    Cast,
-    Float
+    Float,
 )
 from sqlalchemy.orm import (
     Mapped,

@@ -20,17 +20,19 @@ DB_HOST = os.getenv('DB_HOST')
 
 ENGINE = os.getenv('ENGINE')
 
+POSTGRESS_DB = os.getenv('POSTGRESS_DB')
 
 APP_HOST = os.getenv('APP_HOST')
 APP_PORT = os.getenv('APP_PORT')
-APP_DEBUG = os.getenv('app_debug')
+APP_DEBUG = os.getenv('APP_DEBUG', 0)
 
 if ENGINE == 'postgresql+psycopg2':
     BASE_URL = f'{ENGINE}://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}'
 else:
     BASE_URL = ''
 
-ENGINE_OPTIONS = {'echo': True}
+ECHO_OPTION = os.getenv('ECHO_OPTION')
+ENGINE_OPTIONS = {'echo': int(ECHO_OPTION)}
 
 FOLDER_DATA = r'app/bl/data'
 TEMPLATE_FOLDER = 'site/templates'
