@@ -28,7 +28,6 @@ def test_json_api_drivers(client, name):
     assert response.status_code == 200
     assert response.headers['Content-Type'] == 'application/json'
     data = json.loads(response.data)
-    print(data)
     assert len(data) == DRIVER_AMOUNT
     assert name in data
 
