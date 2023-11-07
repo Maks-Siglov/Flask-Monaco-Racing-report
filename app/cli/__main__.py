@@ -5,7 +5,6 @@ import click
 
 from app.bl.report.console_view import build_from_parser
 from app.bl.report.prepare import convert_and_store_data
-from app.db.utils import create_table
 from app.db.session import (
     set_session,
     pop_session,
@@ -13,7 +12,9 @@ from app.db.session import (
 )
 from app.db.utils import (
     create_database,
-    drop_database
+    drop_database,
+    init_database,
+    create_table,
 )
 from app.config import (
     DB_NAME,
@@ -52,7 +53,10 @@ def report(files: str, driver: str, desc: bool) -> None:
 @click.option('--drop', is_flag=True, help='Drop database')
 @click.option('--recreate', is_flag=True, help='Recreate database')
 @click.option('--load', is_flag=True, help='Insert data to the database')
-def db(db_name, create, drop, recreate, load) -> None:
+@click.option('--init', is_flag=True, help='Init database')
+def db(
+  db_name: str, create: bool, drop: bool, recreate: bool, load: bool, init: bool
+) -> None:
 
     base_superuser_url = f'{BASE_URL}/{POSTGRESS_DB}'
 
@@ -72,6 +76,9 @@ def db(db_name, create, drop, recreate, load) -> None:
         convert_and_store_data(FOLDER_DATA)
         pop_session()
         close_dbs()
+
+    if init:
+        init_database(BASE_URL, DB_NAME)
 
 
 if __name__ == '__main__':
