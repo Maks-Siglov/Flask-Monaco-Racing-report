@@ -31,8 +31,8 @@ if ENGINE == 'postgresql+psycopg2':
 else:
     BASE_URL = ''
 
-ECHO_OPTION = int(os.getenv('ECHO_OPTION'))
-ENGINE_OPTIONS = {'echo': ECHO_OPTION}
+ECHO_OPTION = os.getenv('ECHO_OPTION', 1)
+ENGINE_OPTIONS = {'echo': int(ECHO_OPTION)}
 
 FOLDER_DATA = r'app/bl/data'
 TEMPLATE_FOLDER = 'site/templates'

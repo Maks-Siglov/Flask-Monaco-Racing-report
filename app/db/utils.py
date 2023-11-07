@@ -36,6 +36,10 @@ def drop_database(db_url: str, db_name: str) -> None:
 
 
 def init_database(db_url: str, db_name: str) -> None:
+    """This function upgrades database using Alembic, it set sqlalchemy url by
+    db_url and db_name, after this upgrade 'head', before using, you need to
+    create revision
+    """
     import alembic.config
     import alembic.command
     alembic_config = alembic.config.Config('alembic.ini')

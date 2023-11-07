@@ -10,12 +10,9 @@ from app.config import (
     FOLDER_DATA,
 )
 from app.db.utils import (
-    drop_table,
-    create_table,
-)
-from app.db.utils import (
-    drop_database,
     create_database,
+    drop_database,
+    create_table,
 )
 from app.db.session import (
     close_dbs,

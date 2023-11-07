@@ -36,7 +36,7 @@ def report() -> str:
 @report_bp.route('/report/drivers/', methods=['GET'])
 def drivers() -> str:
     """Shows a list of driver's names and codes.
-     Code is a link to info about drivers.
+    Code is a link to info about drivers.
 
     :return: render HTML template
     """
