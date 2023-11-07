@@ -58,15 +58,3 @@ def pytest_sessionfinish(session, exitstatus):
         drop_database(BASE_SUPERUSER_URL, DB_NAME)
     finally:
         print(f'DROP DB {DB_NAME}')
-
-
-@pytest.fixture
-def fresh_db():
-    set_session()
-    drop_table()
-    create_table()
-    yield
-    drop_table()
-    create_table()
-    convert_and_store_data(FOLDER_DATA)
-    pop_session()
