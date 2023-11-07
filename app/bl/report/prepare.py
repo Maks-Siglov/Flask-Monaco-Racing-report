@@ -21,8 +21,8 @@ DATE_FORMAT = '%Y-%m-%d_%H:%M:%S.%f'
 def convert_and_store_data(folder_path: str = FOLDER_DATA) -> None:
     """This function convert data from log files and stores it to database
 
-     :param folder_path: path to the folder with log files
-     """
+    :param folder_path: path to the folder with log files
+    """
     start_log, end_log, abbreviations_data = read_log_files(folder_path)
 
     prepare_start = _prepare_data_from_file(start_log)
@@ -61,6 +61,8 @@ def _prepare_data_from_file(file_data: list[str]) -> dict[str, datetime]:
 def sort_results(driver_results: list[Result]) -> list[Result]:
     """This function sorts results by his owner inside a database for and set
     position to each
+
+    :return: List of sorted Result with position
     """
     sorted_result = sorted(
         driver_results,

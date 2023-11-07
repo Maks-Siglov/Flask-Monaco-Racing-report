@@ -29,7 +29,7 @@ def cli() -> None:
     at console report in desirable order or report about unique driver, the
     second provide interaction with database: create, drop, recreate and insert
     data to db. If you want report console view use report command, if you want
-     to interact with database use db command.
+    to interact with database use db command.
     """
     pass
 

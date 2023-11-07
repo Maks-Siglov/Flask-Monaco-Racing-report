@@ -51,7 +51,7 @@ def unique_driver_query(driver_id) -> Row[tuple[Result, Driver]] | None:
     """This function creates query for unique driver router
 
     :param driver_id: driver abbreviation
-    :return: tuple which contains two object, first - Result with
+    :return: Row with tuple which contains two object, first - Result with
     results data, second - Driver or None if driver_id (abbr) don't exist in db
     """
     statement = (
