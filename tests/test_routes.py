@@ -5,7 +5,7 @@ routes_test_case = [
     ('Common Statistics', '/report/', 200),
     ('Drivers info', '/report/drivers/', 200),
     ('Drivers info', '/report/drivers/?order=desc', 200),
-    ('Driver Statistics', '/report/drivers/SPF', 200)
+    ('Driver Statistics', '/report/drivers/SPF', 200),
 ]
 
 

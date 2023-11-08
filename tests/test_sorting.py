@@ -19,10 +19,12 @@ def test_sort_drivers():
     worst_driver = Driver(abbr='LHM', name='Lewis Hamilton', team='MERCEDES')
     best_driver = Driver(abbr='NHR', name='Nico Hulkenberg', team='RENAULT')
 
-    worst_result = Result(driver=worst_driver, start=START_WORST_DRIVER,
-                          end=END_WORST_DRIVER)
-    best_result = Result(driver=best_driver, start=START_BEST_DRIVER,
-                         end=END_BEST_DRIVER)
+    worst_result = Result(
+        driver=worst_driver, start=START_WORST_DRIVER, end=END_WORST_DRIVER
+    )
+    best_result = Result(
+        driver=best_driver, start=START_BEST_DRIVER, end=END_BEST_DRIVER
+    )
 
     sorted_results = sort_results([worst_result, best_result])
 
