@@ -8,8 +8,8 @@ from flask import (
     Response,
     make_response,
 )
-from app.db.models.result_model import Result
-from app.db.models.driver_model import Driver
+from app.db.models.result import Result
+from app.db.models.driver import Driver
 
 
 def xml_response_api_report(query_result: Sequence[Driver]) -> Response:
@@ -27,7 +27,7 @@ def xml_response_api_report(query_result: Sequence[Driver]) -> Response:
 
         abbr_element.text = driver.abbr
         name.text = driver.name
-        team.text = driver.team
+        team.text = driver.team.name
 
     response = make_response(
         ElementTree.tostring(root, encoding='utf-8').decode()
@@ -90,6 +90,6 @@ def _prepare_driver_xml(
     lap_time = ElementTree.SubElement(driver_element, 'lap_time')
 
     driver_element.text = driver.name
-    team.text = driver.team
+    team.text = driver.team.name
     position.text = str(result.position)
     lap_time.text = str(result.total_seconds)

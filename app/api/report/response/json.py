@@ -9,8 +9,8 @@ from flask import (
     make_response,
 )
 
-from app.db.models.result_model import Result
-from app.db.models.driver_model import Driver
+from app.db.models.result import Result
+from app.db.models.driver import Driver
 
 
 def json_response_api_report(query_result: Sequence[Driver]) -> Response:
@@ -20,7 +20,7 @@ def json_response_api_report(query_result: Sequence[Driver]) -> Response:
     take drivers
     """
     data = {
-        driver.abbr: {'name': driver.name, 'team': driver.team}
+        driver.abbr: {'name': driver.name, 'team': driver.team.name}
         for driver in query_result
             }
 
@@ -58,7 +58,7 @@ def _prepare_json_driver(result: Result, driver: Driver) -> dict[str, Any]:
     """
     json_driver = {
         'position': result.position,
-        'team': driver.team,
+        'team': driver.team.name,
         'lap_time': result.total_seconds
     }
     return json_driver

@@ -5,10 +5,10 @@ import re
 from datetime import datetime
 
 from app.bl.report.provider import read_log_files
-from app.db.models.result_model import Result
-from app.db.models.driver_model import Driver
-from app.db.models.race_model import Race
-from app.db.models.stage_model import Stage
+from app.db.models.result import Result
+from app.db.models.driver import Driver, Team
+from app.db.models.race import Race
+from app.db.models.stage import Stage
 
 from app.db.session import s
 from app.config import FOLDER_DATA
@@ -16,6 +16,9 @@ from app.config import FOLDER_DATA
 
 PATTERN = re.compile(r'(^[A-Z]+)(\S+)')
 DATE_FORMAT = '%Y-%m-%d_%H:%M:%S.%f'
+
+RACE = Race(name='Monaco Racing', year=2018)
+STAGE = Stage(name='Q3')
 
 
 def convert_and_store_data(folder_path: str = FOLDER_DATA) -> None:
@@ -28,17 +31,21 @@ def convert_and_store_data(folder_path: str = FOLDER_DATA) -> None:
     prepare_start = _prepare_data_from_file(start_log)
     prepare_end = _prepare_data_from_file(end_log)
 
-    race = Race(name='Monaco Racing', year=2018)
-    stage = Stage(name='Q3')
-
+    teams = set()
     driver_results = []
+
     for param in abbreviations_data:
-        abbr, name, team = param.strip().split('_')
+        abbr, name, team_name = param.strip().split('_')
         start, end = prepare_start[abbr], prepare_end[abbr]
+
+        team = next((team for team in teams if team.name == team_name), None)
+        if team is None:
+            team = Team(name=team_name)
+            teams.add(team)
 
         driver = Driver(abbr=abbr, name=name, team=team)
         result = Result(
-            driver=driver, race=race, stage=stage, start=start, end=end
+            driver=driver, race=RACE, stage=STAGE, start=start, end=end
         )
         driver_results.append(result)
 

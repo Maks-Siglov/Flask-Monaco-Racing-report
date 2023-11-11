@@ -4,8 +4,8 @@ from sqlalchemy import select
 
 from app.db.session import s
 from app.crud.report import drivers_query
-from app.db.models.result_model import Result
-from app.db.models.driver_model import Driver
+from app.db.models.result import Result
+from app.db.models.driver import Driver
 
 SEPARATOR_SYMBOL = '-'
 SEPARATOR_LENGTH = 64
@@ -52,7 +52,7 @@ def print_report(order: bool = True) -> None:
         row = (
             f'{string_position:<{INDEX_INDENT}}'
             f' {driver.name:<{NAME_INDENT}} | '
-            f' {driver.team:<{TEAM_INDENT}} | '
+            f' {driver.team.name:<{TEAM_INDENT}} | '
             f'{result.result[0]}:{result.result[1]}'
         )
 
@@ -75,7 +75,7 @@ def report_unique_driver(driver_name: str) -> None:
     if item:
         result, driver = item
         print(
-            f'{result.position}. {driver.name} | {driver.team} |'
+            f'{result.position}. {driver.name} | {driver.team.name} |'
             f' {result.result[0]}:{result.result[1]}'
         )
     else:

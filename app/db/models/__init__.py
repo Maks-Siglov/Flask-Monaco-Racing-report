@@ -1,5 +1,5 @@
 from .base import Base
 
-from .result_model import Result
-from .driver_model import Driver
+from .result import Result
+from .driver import Driver
 

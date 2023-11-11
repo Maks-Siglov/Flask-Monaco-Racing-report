@@ -17,9 +17,9 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 
 from app.db.models.base import Base
-from app.db.models.driver_model import Driver
-from app.db.models.race_model import Race
-from app.db.models.stage_model import Stage
+from app.db.models.driver import Driver
+from app.db.models.race import Race
+from app.db.models.stage import Stage
 
 
 class Result(Base):
@@ -30,17 +30,17 @@ class Result(Base):
     position: Mapped[int] = mapped_column(nullable=True)
 
     driver_id: Mapped[int] = mapped_column(
-        ForeignKey('drivers.id', ondelete='RESTRICT'), primary_key=True
+        ForeignKey('drivers.id', ondelete='CASCADE'), primary_key=True
     )
     driver: Mapped['Driver'] = relationship()
 
     race_id: Mapped[int] = mapped_column(ForeignKey(
-        'races.id', ondelete='RESTRICT'), primary_key=True
+        'races.id', ondelete='CASCADE'), primary_key=True
     )
     race: Mapped['Race'] = relationship()
 
     stage_id: Mapped[int] = mapped_column(ForeignKey(
-        'stages.id', ondelete='RESTRICT'), primary_key=True
+        'stages.id', ondelete='CASCADE'), primary_key=True
     )
     stage: Mapped['Stage'] = relationship()
 
