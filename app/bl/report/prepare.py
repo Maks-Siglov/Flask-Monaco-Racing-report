@@ -5,10 +5,10 @@ import re
 from datetime import datetime
 
 from app.bl.report.provider import read_log_files
-from app.db.models.reports import (
-    Driver,
-    Result,
-)
+from app.db.models.result_model import Result
+from app.db.models.driver_model import Driver
+from app.db.models.race_model import Race
+from app.db.models.stage_model import Stage
 
 from app.db.session import s
 from app.config import FOLDER_DATA
@@ -28,13 +28,18 @@ def convert_and_store_data(folder_path: str = FOLDER_DATA) -> None:
     prepare_start = _prepare_data_from_file(start_log)
     prepare_end = _prepare_data_from_file(end_log)
 
+    race = Race(name='Monaco Racing', year=2018)
+    stage = Stage(name='Q3')
+
     driver_results = []
     for param in abbreviations_data:
         abbr, name, team = param.strip().split('_')
         start, end = prepare_start[abbr], prepare_end[abbr]
 
         driver = Driver(abbr=abbr, name=name, team=team)
-        result = Result(driver=driver, start=start, end=end)
+        result = Result(
+            driver=driver, race=race, stage=stage, start=start, end=end
+        )
         driver_results.append(result)
 
     s.user_db.add_all(sort_results(driver_results))

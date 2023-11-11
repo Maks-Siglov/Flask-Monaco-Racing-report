@@ -4,7 +4,6 @@ from datetime import datetime
 
 from sqlalchemy import (
     Cast,
-    String,
     ForeignKey,
     ColumnElement,
     Float,
@@ -18,31 +17,32 @@ from sqlalchemy.ext.hybrid import hybrid_property
 
 
 from app.db.models.base import Base
-
-
-class Driver(Base):
-    __tablename__ = 'drivers'
-
-    id: Mapped[int] = mapped_column(primary_key=True)
-    abbr: Mapped[str] = mapped_column(String(5))
-    name: Mapped[str] = mapped_column(String(30))
-    team: Mapped[str] = mapped_column(String(50))
-
-    result: Mapped['Result'] = relationship(back_populates='driver')
+from app.db.models.driver_model import Driver
+from app.db.models.race_model import Race
+from app.db.models.stage_model import Stage
 
 
 class Result(Base):
     __tablename__ = 'results'
 
-    id: Mapped[int] = mapped_column(primary_key=True)
-    driver_id: Mapped[int] = mapped_column(
-        ForeignKey('drivers.id', ondelete='RESTRICT')
-    )
     start: Mapped[datetime] = mapped_column()
     end: Mapped[datetime] = mapped_column()
     position: Mapped[int] = mapped_column(nullable=True)
 
-    driver: Mapped['Driver'] = relationship(back_populates='result')
+    driver_id: Mapped[int] = mapped_column(
+        ForeignKey('drivers.id', ondelete='RESTRICT'), primary_key=True
+    )
+    driver: Mapped['Driver'] = relationship()
+
+    race_id: Mapped[int] = mapped_column(ForeignKey(
+        'races.id', ondelete='RESTRICT'), primary_key=True
+    )
+    race: Mapped['Race'] = relationship()
+
+    stage_id: Mapped[int] = mapped_column(ForeignKey(
+        'stages.id', ondelete='RESTRICT'), primary_key=True
+    )
+    stage: Mapped['Stage'] = relationship()
 
     @hybrid_property
     def total_seconds(self) -> float:

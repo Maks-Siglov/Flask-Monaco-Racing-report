@@ -44,6 +44,7 @@ def report(files: str, driver: str, desc: bool) -> None:
         raise ValueError(f"Path {files} from --file argument don't exist")
     set_session()
     build_from_parser(files, driver, desc)
+    pop_session()
     close_dbs()
 
 

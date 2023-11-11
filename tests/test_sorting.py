@@ -2,7 +2,8 @@
 
 from datetime import datetime
 
-from app.db.models.reports import Driver, Result
+from app.db.models.result_model import Result
+from app.db.models.driver_model import Driver
 from app.bl.report.prepare import sort_results
 
 DATE_FORMAT = '%Y-%m-%d_%H:%M:%S.%f'

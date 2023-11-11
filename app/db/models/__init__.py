@@ -1,3 +1,5 @@
 from .base import Base
 
-from .reports import Driver, Result
+from .result_model import Result
+from .driver_model import Driver
+

@@ -8,10 +8,8 @@ from sqlalchemy import (
 )
 
 from app.db.session import s
-from app.db.models.reports import (
-    Driver,
-    Result,
-)
+from app.db.models.result_model import Result
+from app.db.models.driver_model import Driver
 
 
 def report_query(order) -> Sequence[Driver]:
