@@ -42,7 +42,7 @@ def test_xml_api_drivers(client, position, name):
     assert driver_elements[position].text == name
 
 
-xml_driver_test_case = [
+xml_driver_cases = [
     ('SVF', 'Sebastian Vettel', '1', '64.415'),
     ('FAM', 'Fernando Alonso', '5', '72.657'),
     ('CSR', 'Carlos Sainz', '10', '72.95'),
@@ -51,7 +51,7 @@ xml_driver_test_case = [
 ]
 
 
-@pytest.mark.parametrize('abbr, name, position, lap_time', xml_driver_test_case)
+@pytest.mark.parametrize('abbr, name, position, lap_time', xml_driver_cases)
 def test_xml_api_driver(client, abbr, name, position, lap_time):
     response = client.get(
         f'{API_DRIVERS_ROUTE}/{abbr}', query_string={'format': 'xml'}

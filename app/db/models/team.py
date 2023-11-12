@@ -18,4 +18,3 @@ class Team(Base):
 
     def __repr__(self) -> str:
         return f"<Team(id: {self.id}, {self.name})>"
-

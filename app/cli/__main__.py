@@ -26,11 +26,11 @@ from app.config import (
 
 @click.group()
 def cli() -> None:
-    """This click cli group provides two commands first - report which represent
-    at console report in desirable order or report about unique driver, the
-    second provide interaction with database: create, drop, recreate and insert
-    data to db. If you want report console view use report command, if you want
-    to interact with database use db command.
+    """This click cli group provides two commands first - report which
+    represent at console report in desirable order or report about unique
+    driver, the second provide interaction with database: create, drop,
+    recreate and insert data to db. If you want report console view use report
+    command, if you want to interact with database use db command.
     """
     pass
 

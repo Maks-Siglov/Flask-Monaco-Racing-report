@@ -18,4 +18,3 @@ class Stage(Base):
 
     def __repr__(self) -> str:
         return f"<Stage(id: {self.id}, {self.name})>"
-

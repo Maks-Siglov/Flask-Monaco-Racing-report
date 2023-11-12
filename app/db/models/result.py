@@ -59,6 +59,10 @@ class Result(Base):
 
     def __repr__(self) -> str:
         return (
-            f"<Result(position: {self.position}, start: {self.start},"
-            f" end: {self.end}, {self.driver}, {self.race}, {self.stage})>"
+            f"<Result(position: {self.position},"
+            f" start: {self.start},"
+            f" end: {self.end},"
+            f" {self.driver},"
+            f" {self.race},"
+            f" {self.stage})>"
         )
