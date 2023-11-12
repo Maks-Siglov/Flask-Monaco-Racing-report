@@ -36,3 +36,5 @@ ENGINE_OPTIONS = {'echo': int(ECHO_OPTION)}
 
 FOLDER_DATA = r'app/bl/data'
 TEMPLATE_FOLDER = 'site/templates'
+
+RACE = 'Monaco Racing_2018_Q3'

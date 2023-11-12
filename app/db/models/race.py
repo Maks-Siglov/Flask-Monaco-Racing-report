@@ -15,3 +15,6 @@ class Race(Base):
 
     name: Mapped[str] = mapped_column(default='Monaco')
     year: Mapped[int] = mapped_column(default=2018)
+
+    def __repr__(self) -> str:
+        return f"<Race(id: {self.id}, {self.name}, {self.year})>"

@@ -15,3 +15,7 @@ class Team(Base):
     id: Mapped[int] = mapped_column(primary_key=True)
 
     name: Mapped[str] = mapped_column(String(50))
+
+    def __repr__(self) -> str:
+        return f"<Team(id: {self.id}, {self.name})>"
+

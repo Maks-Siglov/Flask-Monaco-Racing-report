@@ -11,14 +11,14 @@ from app.db.models.race import Race
 from app.db.models.stage import Stage
 
 from app.db.session import s
-from app.config import FOLDER_DATA
+from app.config import (
+    FOLDER_DATA,
+    RACE
+)
 
 
 PATTERN = re.compile(r'(^[A-Z]+)(\S+)')
 DATE_FORMAT = '%Y-%m-%d_%H:%M:%S.%f'
-
-RACE = Race(name='Monaco Racing', year=2018)
-STAGE = Stage(name='Q3')
 
 
 def convert_and_store_data(folder_path: str = FOLDER_DATA) -> None:
@@ -30,22 +30,20 @@ def convert_and_store_data(folder_path: str = FOLDER_DATA) -> None:
 
     prepare_start = _prepare_data_from_file(start_log)
     prepare_end = _prepare_data_from_file(end_log)
+    race, stage = _prepare_race(RACE)
 
-    teams = set()
+    teams = {}
     driver_results = []
-
     for param in abbreviations_data:
         abbr, name, team_name = param.strip().split('_')
         start, end = prepare_start[abbr], prepare_end[abbr]
 
-        team = next((team for team in teams if team.name == team_name), None)
-        if team is None:
-            team = Team(name=team_name)
-            teams.add(team)
+        if team_name not in teams:
+            teams[team_name] = Team(name=team_name)
 
-        driver = Driver(abbr=abbr, name=name, team=team)
+        driver = Driver(abbr=abbr, name=name, team=teams[team_name])
         result = Result(
-            driver=driver, race=RACE, stage=STAGE, start=start, end=end
+            driver=driver, race=race, stage=stage, start=start, end=end
         )
         driver_results.append(result)
 
@@ -68,6 +66,12 @@ def _prepare_data_from_file(file_data: list[str]) -> dict[str, datetime]:
         prepare_result[abbr] = datetime.strptime(time, DATE_FORMAT)
 
     return prepare_result
+
+
+def _prepare_race(race) -> tuple[Race, Stage]:
+    """This function prepare Race and Stage model for report"""
+    race_name, year, stage = race.strip().split('_')
+    return Race(name=race_name, year=year), Stage(name=stage)
 
 
 def sort_results(driver_results: list[Result]) -> list[Result]:

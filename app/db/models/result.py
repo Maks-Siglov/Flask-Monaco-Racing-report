@@ -56,3 +56,9 @@ class Result(Base):
     def result(self) -> tuple[int, float]:
         minutes, seconds = divmod(self.total_seconds, 60)
         return int(minutes), round(seconds, 3)
+
+    def __repr__(self) -> str:
+        return (
+            f"<Result(position: {self.position}, start: {self.start},"
+            f" end: {self.end}, {self.driver}, {self.race}, {self.stage})>"
+        )

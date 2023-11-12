@@ -23,3 +23,6 @@ class Driver(Base):
         'teams.id', ondelete='CASCADE')
     )
     team: Mapped['Team'] = relationship()
+
+    def __repr__(self) -> str:
+        return f"<Driver(id: {self.id}, {self.abbr}, {self.name}, {self.team})>"
