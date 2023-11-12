@@ -22,7 +22,7 @@ def json_response_api_report(query_result: Sequence[Driver]) -> Response:
     data = {
         driver.abbr: {'name': driver.name, 'team': driver.team.name}
         for driver in query_result
-            }
+    }
 
     return make_response(jsonify(data))
 
