@@ -2,7 +2,10 @@
 
 import logging
 
-from sqlalchemy import create_engine, text
+from sqlalchemy import (
+    create_engine,
+    text,
+)
 from sqlalchemy.exc import ProgrammingError
 
 from app.db.models.base import Base

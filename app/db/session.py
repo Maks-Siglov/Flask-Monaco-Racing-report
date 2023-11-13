@@ -4,10 +4,22 @@ import logging
 
 from dataclasses import dataclass
 from contextvars import ContextVar
-from sqlalchemy import create_engine, Engine, select
-from sqlalchemy.orm import sessionmaker, Session, SessionTransaction
+from sqlalchemy import (
+    create_engine,
+    Engine,
+    select
+)
+from sqlalchemy.orm import (
+    sessionmaker,
+    Session,
+    SessionTransaction
+)
 
-from app.config import BASE_URL, DB_NAME, ENGINE_OPTIONS
+from app.config import (
+    BASE_URL,
+    DB_NAME,
+    ENGINE_OPTIONS
+)
 
 log = logging.getLogger(__name__)
 

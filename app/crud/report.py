@@ -2,14 +2,15 @@
 
 from typing import Sequence
 
+from app.db.session import s
 from sqlalchemy import (
     Row,
     select,
 )
-
-from app.db.session import s
-from app.db.models.result import Result
-from app.db.models.driver import Driver
+from app.db.models import (
+    Result,
+    Driver
+)
 
 
 def report_query(order) -> Sequence[Driver]:

@@ -9,8 +9,10 @@ from flask import (
     make_response,
 )
 
-from app.db.models.result import Result
-from app.db.models.driver import Driver
+from app.db.models import (
+    Result,
+    Driver
+)
 
 
 def json_response_api_report(query_result: Sequence[Driver]) -> Response:

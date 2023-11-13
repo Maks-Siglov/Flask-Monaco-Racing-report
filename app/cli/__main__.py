@@ -55,12 +55,14 @@ def report(files: str, driver: str, desc: bool) -> None:
 @click.option('--recreate', is_flag=True, help='Recreate database')
 @click.option('--load', is_flag=True, help='Insert data to the database')
 @click.option('--init', is_flag=True, help='Init database')
-def db(db_name: str,
-       create: bool,
-       drop: bool,
-       recreate: bool,
-       load: bool,
-       init: bool) -> None:
+def db(
+    db_name: str,
+    create: bool,
+    drop: bool,
+    recreate: bool,
+    load: bool,
+    init: bool,
+) -> None:
     base_superuser_url = f'{BASE_URL}/{POSTGRESS_DB}'
 
     if drop:

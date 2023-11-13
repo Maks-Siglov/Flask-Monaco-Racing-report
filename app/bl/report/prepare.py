@@ -4,16 +4,18 @@ import re
 
 from datetime import datetime
 
-from app.bl.report.provider import read_log_files
-from app.db.models.result import Result
-from app.db.models.driver import Driver, Team
-from app.db.models.race import Race
-from app.db.models.stage import Stage
-
 from app.db.session import s
+from app.bl.report.provider import read_log_files
+from app.db.models import (
+    Result,
+    Driver,
+    Team,
+    Race,
+    Stage,
+)
 from app.config import (
     FOLDER_DATA,
-    RACE
+    RACE,
 )
 
 
@@ -56,9 +58,7 @@ def _prepare_data_from_file(file_data: list[str]) -> dict[str, datetime]:
     :param file_data: file where we take data
     :return: dictionary, where abbreviation is key, start lap time - is value
     """
-
     prepare_result = {}
-
     for param in file_data:
         match = PATTERN.match(param)
         assert match

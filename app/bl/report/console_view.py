@@ -4,8 +4,11 @@ from sqlalchemy import select
 
 from app.db.session import s
 from app.crud.report import drivers_query
-from app.db.models.result import Result
-from app.db.models.driver import Driver
+from app.db.models import (
+    Result,
+    Driver
+)
+
 
 SEPARATOR_SYMBOL = '-'
 SEPARATOR_LENGTH = 64

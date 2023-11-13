@@ -18,13 +18,13 @@ DB_PASSWORD = os.getenv('DB_PASSWORD')
 DB_PORT = os.getenv('DB_PORT')
 DB_HOST = os.getenv('DB_HOST')
 
-ENGINE = os.getenv('ENGINE')
-
 POSTGRESS_DB = os.getenv('POSTGRESS_DB')
 
 APP_HOST = os.getenv('APP_HOST')
 APP_PORT = os.getenv('APP_PORT')
 APP_DEBUG = os.getenv('APP_DEBUG', 0)
+
+ENGINE = os.getenv('ENGINE')
 
 if ENGINE == 'postgresql+psycopg2':
     BASE_URL = f'{ENGINE}://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:{DB_PORT}'
