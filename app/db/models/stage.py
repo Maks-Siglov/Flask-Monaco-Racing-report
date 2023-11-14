@@ -14,7 +14,7 @@ class Stage(Base):
 
     id: Mapped[int] = mapped_column(primary_key=True)
 
-    name: Mapped[str] = mapped_column(String(10), default='Q3')
+    name: Mapped[str] = mapped_column(String(10), unique=True)
 
     def __repr__(self) -> str:
-        return f"<Stage(id: {self.id}, {self.name})>"
+        return f"Stage(id: {self.id}, {self.name})"

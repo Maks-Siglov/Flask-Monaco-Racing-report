@@ -30,17 +30,17 @@ class Result(Base):
     position: Mapped[int] = mapped_column(nullable=True)
 
     driver_id: Mapped[int] = mapped_column(
-        ForeignKey('drivers.id', ondelete='CASCADE'), primary_key=True
+        ForeignKey('drivers.id', ondelete='RESTRICT'), primary_key=True
     )
     driver: Mapped['Driver'] = relationship()
 
     race_id: Mapped[int] = mapped_column(ForeignKey(
-        'races.id', ondelete='CASCADE'), primary_key=True
+        'races.id', ondelete='RESTRICT'), primary_key=True
     )
     race: Mapped['Race'] = relationship()
 
     stage_id: Mapped[int] = mapped_column(ForeignKey(
-        'stages.id', ondelete='CASCADE'), primary_key=True
+        'stages.id', ondelete='RESTRICT'), primary_key=True
     )
     stage: Mapped['Stage'] = relationship()
 
@@ -59,10 +59,10 @@ class Result(Base):
 
     def __repr__(self) -> str:
         return (
-            f"<Result(position: {self.position},"
+            f"Result(position: {self.position},"
             f" start: {self.start},"
             f" end: {self.end},"
             f" {self.driver},"
             f" {self.race},"
-            f" {self.stage})>"
+            f" {self.stage})"
         )

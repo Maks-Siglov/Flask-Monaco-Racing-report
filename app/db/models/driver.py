@@ -20,11 +20,11 @@ class Driver(Base):
     name: Mapped[str] = mapped_column(String(30))
 
     team_id: Mapped[int] = mapped_column(ForeignKey(
-        'teams.id', ondelete='CASCADE')
+        'teams.id', ondelete='RESTRICT')
     )
     team: Mapped['Team'] = relationship()
 
     def __repr__(self) -> str:
         return (
-            f"<Driver(id: {self.id}, {self.abbr}, {self.name}, {self.team})>"
+            f"Driver(id: {self.id}, {self.abbr}, {self.name}, {self.team})"
         )
