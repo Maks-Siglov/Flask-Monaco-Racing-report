@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Driver Statistics
+{% endblock %}
+
+{% block body %}
+<h1>Driver Statistics</h1>
+
+<table>
+    <thead>
+    <tr>
+        <th>Position</th>
+        <th>Name</th>
+        <th>Team</th>
+        <th>Lap time</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr>
+        <td>{{ result.position }}.</td>
+        <td>{{ driver.name }}</td>
+        <td>{{ driver.team.name }}</td>
+        <td>{{ result.result[0] }}:{{ result.result[1] }}</td>
+    </tr>
+    </tbody>
+</table>
+{% endblock %}

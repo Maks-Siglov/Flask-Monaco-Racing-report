@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}
+    Drivers info
+{% endblock %}
+{% block body %}
+<h1>Drivers info</h1>
+<table>
+    <thead>
+        <tr>
+            <th>Position</th>
+            <th>Name</th>
+            <th>Code</th>
+            <th>Lap time</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for result, driver in query_result %}
+        <tr>
+            <td>{{ result.position}}.</td>
+            <td>{{ driver.name }}</td>
+            <td><a href="{{ url_for('report.unique_driver', driver_id=driver.abbr) }}">{{ driver.abbr }}</a></td>
+            <td>{{ result.result[0] }}:{{ result.result[1] }}</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+{% endblock %}
