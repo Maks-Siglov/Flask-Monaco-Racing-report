@@ -1,4 +1,4 @@
-
+import atexit
 
 from typing import Any
 
@@ -45,11 +45,6 @@ def create_app() -> Flask:
         pop_session()
         return args
 
-    @app.teardown_appcontext
-    def close_db(args: Any) -> Any:
-        close_dbs()
-        return args
-
     app.register_blueprint(report_bp)
     app.register_blueprint(error_bp)
 
@@ -60,6 +55,9 @@ def create_app() -> Flask:
     return app
 
 
+app = create_app()
+
 if __name__ == '__main__':
+    atexit.register(close_dbs)
     assert APP_PORT
-    create_app().run(host=APP_HOST, port=APP_PORT, debug=APP_DEBUG)
+    app.run(host=APP_HOST, port=APP_PORT, debug=APP_DEBUG)
